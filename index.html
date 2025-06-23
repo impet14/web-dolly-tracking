@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="th,en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dolly Tracking Dashboard</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Leaflet.js -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --primary-light: #818cf8;
+            --secondary: #0ea5e9;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Inter', 'Noto Sans Thai', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+        
+        .thai-lang {
+            font-family: 'Noto Sans Thai', sans-serif;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(226, 232, 240, 0.4);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+        }
+        
+        .kpi-card {
+            background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .online-card {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            border-left: 4px solid var(--success);
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            max-height: 350px;
+        }
+        
+        #map {
+            height: 100%;
+            min-height: 500px;
+            border-radius: 16px;
+            z-index: 10;
+        }
+        
+        .main-tab-button {
+            flex: 1;
+            padding: 1rem;
+            font-weight: 600;
+            color: #4b5563;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+            background: rgba(226, 232, 240, 0.5);
+        }
+        
+        .main-tab-button:hover {
+            background: rgba(224, 231, 255, 0.7);
+            color: var(--primary-dark);
+        }
+        
+        .main-tab-button.active {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--primary);
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-bottom: 3px solid var(--primary);
+            font-weight: 700;
+        }
+        
+        .pulse-online {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse-green 2s infinite;
+        }
+        
+        @keyframes pulse-green {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+            
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .fab:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.25);
+        }
+        
+        @keyframes highlight-row {
+            0% { background-color: rgba(254, 249, 195, 0.8); }
+            100% { background-color: transparent; }
+        }
+        
+        .highlight {
+            animation: highlight-row 2s ease-out;
+        }
+        
+        .lang-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+            background: white;
+            border-radius: 50px;
+            padding: 0.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .dolly-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: background-color 0.3s ease;
+        }
+        
+        .dolly-icon.online {
+            background-color: var(--success);
+        }
+        
+        .dolly-icon.offline {
+            background-color: var(--danger);
+        }
+        
+        .dolly-icon.unknown {
+            background-color: #6b7280;
+        }
+        
+        .connection-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .connected { background-color: var(--success); }
+        .connecting { background-color: var(--warning); }
+        .disconnected { background-color: var(--danger); }
+    </style>
+    
+    <script>
+        // Translation object for Thai/English
+        const translations = {
+            en: {
+                title: "Dolly Tracking Dashboard",
+                subtitle: "Real-time monitoring for Thai Post Office dolly network",
+                dashboard: "Dashboard Overview",
+                liveData: "Live Map & Data",
+                configuration: "Configuration",
+                networkHealth: "Network Health Overview",
+                networkDesc: "Real-time status of your dolly network",
+                totalGateways: "TOTAL GATEWAYS",
+                onlineGateways: "ONLINE GATEWAYS",
+                totalDollies: "TOTAL DOLLIES",
+                onlineDollies: "ONLINE DOLLIES",
+                gatewayStatus: "Gateway Status",
+                dollyStatus: "Dolly Status",
+                liveNetwork: "Live Network View",
+                liveDesc: "Real-time locations and status updates",
+                gateways: "Gateways",
+                dollies: "Dollies",
+                id: "ID",
+                status: "Status",
+                gateway: "Gateway",
+                rssi: "RSSI",
+                systemConfig: "System Configuration",
+                configDesc: "Manage your network infrastructure",
+                addEdit: "Add / Edit Gateway",
+                gatewayId: "Gateway ID",
+                gatewayName: "Gateway Name",
+                latitude: "Latitude",
+                longitude: "Longitude",
+                saveGateway: "Save Gateway",
+                clear: "Clear",
+                configuredGateways: "Configured Gateways",
+                actions: "Actions",
+                edit: "Edit",
+                delete: "Delete",
+                online: "Online",
+                offline: "Offline",
+                user: "User ID",
+                mqttStatus: "MQTT Status",
+                connecting: "Connecting...",
+                connected: "Connected",
+                disconnected: "Disconnected",
+                resetMap: "Reset Map View",
+                dataFlow: "Real-time Data Flow",
+                connectedDevices: "Connected Devices"
+            },
+            th: {
+                title: "แดชบอร์ดติดตามรถเข็น",
+                subtitle: "ระบบติดตามเครือข่ายรถเข็นไปรษณีย์ไทยแบบเรียลไทม์",
+                dashboard: "ภาพรวมแดชบอร์ด",
+                liveData: "แผนที่และข้อมูลสด",
+                configuration: "การกำหนดค่า",
+                networkHealth: "สถานะเครือข่าย",
+                networkDesc: "ข้อมูลเครือข่ายรถเข็นแบบเรียลไทม์",
+                totalGateways: "เกตเวย์ทั้งหมด",
+                onlineGateways: "เกตเวย์ออนไลน์",
+                totalDollies: "รถเข็นทั้งหมด",
+                onlineDollies: "รถเข็นออนไลน์",
+                gatewayStatus: "สถานะเกตเวย์",
+                dollyStatus: "สถานะรถเข็น",
+                liveNetwork: "แสดงเครือข่ายแบบสด",
+                liveDesc: "ตำแหน่งและสถานะแบบเรียลไทม์",
+                gateways: "เกตเวย์",
+                dollies: "รถเข็น",
+                id: "รหัส",
+                status: "สถานะ",
+                gateway: "เกตเวย์",
+                rssi: "สัญญาณ",
+                systemConfig: "การกำหนดค่าระบบ",
+                configDesc: "จัดการโครงสร้างพื้นฐานเครือข่าย",
+                addEdit: "เพิ่ม / แก้ไขเกตเวย์",
+                gatewayId: "รหัสเกตเวย์",
+                gatewayName: "ชื่อเกตเวย์",
+                latitude: "ละติจูด",
+                longitude: "ลองจิจูด",
+                saveGateway: "บันทึกเกตเวย์",
+                clear: "ล้าง",
+                configuredGateways: "เกตเวย์ที่กำหนดค่า",
+                actions: "การดำเนินการ",
+                edit: "แก้ไข",
+                delete: "ลบ",
+                online: "ออนไลน์",
+                offline: "ออฟไลน์",
+                user: "รหัสผู้ใช้",
+                mqttStatus: "สถานะ MQTT",
+                connecting: "กำลังเชื่อมต่อ...",
+                connected: "เชื่อมต่อแล้ว",
+                disconnected: "ตัดการเชื่อมต่อ",
+                resetMap: "รีเซ็ตมุมมองแผนที่",
+                dataFlow: "การไหลของข้อมูล",
+                connectedDevices: "อุปกรณ์ที่เชื่อมต่อ"
+            }
+        };
+        
+        // Current language state
+        let currentLang = 'en';
+    </script>
+</head>
+<body class="min-h-screen">
+    <!-- Language Toggle -->
+    <div class="lang-toggle flex">
+        <div class="lang-btn active" id="lang-en">EN</div>
+        <div class="lang-btn" id="lang-th">ไทย</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl">
+        <!-- Header -->
+        <header class="mb-8 text-center card p-6 relative overflow-hidden">
+            <!-- Decorative elements -->
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+            <div class="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-indigo-100 opacity-50"></div>
+            <div class="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-blue-100 opacity-50"></div>
+            
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2" data-i18n="title">Dolly Tracking Dashboard</h1>
+            <p class="text-lg text-gray-600 mb-4" data-i18n="subtitle">Real-time monitoring for Thai Post Office dolly network</p>
+            
+            <div class="flex flex-wrap justify-center items-center text-sm font-light text-gray-500 gap-4 mt-4">
+                <div><span data-i18n="user">User ID</span>: <span class="font-semibold text-gray-700">SPA User</span></div>
+                <div id="mqtt-status-container">
+                    <span class="connection-indicator connecting"></span>
+                    <span data-i18n="mqttStatus">MQTT Status</span>: 
+                    <span class="font-bold" id="mqtt-status-text" data-i18n="connecting">Connecting...</span>
+                </div>
+                <div id="current-time" class="font-medium">00:00:00 +07:00</div>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="card p-4 flex items-center">
+                <div class="bg-indigo-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-network-wired text-indigo-600 text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-sm text-gray-500" data-i18n="connectedDevices">Connected Devices</div>
+                    <div class="text-2xl font-bold"><span id="total-devices">0</span> <span class="text-sm font-normal text-green-600"><i class="fas fa-arrow-up mr-1"></i><span id="device-change">0</span></span></div>
+                </div>
+            </div>
+            
+            <div class="card p-4 flex items-center">
+                <div class="bg-green-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-signal text-green-600 text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-sm text-gray-500" data-i18n="dataFlow">Real-time Data Flow</div>
+                    <div class="text-2xl font-bold"><span id="messages-received">0</span> <span class="text-sm font-normal">msgs/min</span></div>
+                </div>
+            </div>
+            
+            <div class="card p-4 flex items-center">
+                <div class="bg-blue-100 p-3 rounded-full mr-4">
+                    <i class="fas fa-satellite-dish text-blue-600 text-xl"></i>
+                </div>
+                <div>
+                    <div class="text-sm text-gray-500">Network Uptime</div>
+                    <div class="text-2xl font-bold"><span id="uptime">100</span>%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <nav class="flex border-b border-gray-200 mb-8 rounded-t-lg overflow-hidden">
+            <button id="tab-dashboard" class="main-tab-button active" data-tab="dashboard" data-i18n="dashboard">Dashboard Overview</button>
+            <button id="tab-live-data" class="main-tab-button" data-tab="live-data" data-i18n="liveData">Live Map & Data</button>
+            <button id="tab-configuration" class="main-tab-button" data-tab="configuration" data-i18n="configuration">Configuration</button>
+        </nav>
+
+        <!-- Tab Content Areas -->
+        <div id="dashboard" class="tab-content">
+            <section class="mb-12">
+                <div class="mb-8 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2" data-i18n="networkHealth">Network Health Overview</h2>
+                    <p class="text-gray-500 max-w-3xl" data-i18n="networkDesc">Real-time status of your dolly network</p>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="card kpi-card p-6">
+                        <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="totalGateways">TOTAL GATEWAYS</h3>
+                        <p id="total-gateways" class="text-3xl font-bold text-indigo-600">2</p>
+                    </div>
+                    <div class="card online-card p-6">
+                        <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="onlineGateways">ONLINE GATEWAYS</h3>
+                        <p id="online-gateways" class="text-3xl font-bold text-green-600">2</p>
+                    </div>
+                    <div class="card kpi-card p-6">
+                        <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="totalDollies">TOTAL DOLLIES</h3>
+                        <p id="total-dollies" class="text-3xl font-bold text-indigo-600">0</p>
+                    </div>
+                    <div class="card online-card p-6">
+                        <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="onlineDollies">ONLINE DOLLIES</h3>
+                        <p id="online-dollies" class="text-3xl font-bold text-green-600">0</p>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-center mb-4" data-i18n="gatewayStatus">Gateway Status</h3>
+                        <div class="chart-container">
+                            <canvas id="gatewaysChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-center mb-4" data-i18n="dollyStatus">Dolly Status</h3>
+                        <div class="chart-container">
+                            <canvas id="dolliesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="live-data" class="tab-content hidden">
+            <section class="mb-12">
+                <div class="mb-8 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2" data-i18n="liveNetwork">Live Network View</h2>
+                    <p class="text-gray-500 max-w-3xl" data-i18n="liveDesc">Real-time locations and status updates</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    <!-- Map -->
+                    <div class="lg:col-span-3 card p-4 relative">
+                        <div id="map"></div>
+                        <button id="reset-map" class="absolute top-4 right-4 z-20 bg-white rounded-full p-2 shadow-md hover:bg-gray-50" title="Reset Map View">
+                            <i class="fas fa-sync-alt text-indigo-600"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Data Tables -->
+                    <div class="lg:col-span-2 card p-6">
+                        <div class="mb-4">
+                            <div class="flex border-b border-gray-200">
+                                <button id="show-gateways-btn" class="tab-button active flex-1 py-2 px-4 font-medium text-center rounded-t-lg bg-indigo-50 text-indigo-700" data-i18n="gateways">Gateways</button>
+                                <button id="show-dollies-btn" class="tab-button flex-1 py-2 px-4 font-medium text-center rounded-t-lg hover:bg-indigo-50" data-i18n="dollies">Dollies</button>
+                            </div>
+                        </div>
+
+                        <!-- Gateways Table -->
+                        <div id="gateways-table-container">
+                            <div class="overflow-x-auto max-h-[480px]">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50 sticky top-0">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="id">ID</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="status">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="gateways-tbody" class="bg-white divide-y divide-gray-200">
+                                        <tr class="hover:bg-indigo-50">
+                                            <td class="px-4 py-3 font-medium">gateway1</td>
+                                            <td class="px-4 py-3 font-bold text-green-600"><span class="pulse-online mr-2"></span>ONLINE</td>
+                                        </tr>
+                                        <tr class="hover:bg-indigo-50">
+                                            <td class="px-4 py-3 font-medium">gateway2</td>
+                                            <td class="px-4 py-3 font-bold text-green-600"><span class="pulse-online mr-2"></span>ONLINE</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Dollies Table -->
+                        <div id="dollies-table-container" class="hidden">
+                            <div class="overflow-x-auto max-h-[480px]">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50 sticky top-0">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="id">ID</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="status">Status</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="gateway">Gateway</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="rssi">RSSI</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dollies-tbody" class="bg-white divide-y divide-gray-200">
+                                        <!-- Will be populated by MQTT data -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="configuration" class="tab-content hidden">
+            <section>
+                <div class="mb-8 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2" data-i18n="systemConfig">System Configuration</h2>
+                    <p class="text-gray-500 max-w-3xl" data-i18n="configDesc">Manage your network infrastructure</p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Add/Edit Form -->
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold mb-4" data-i18n="addEdit">Add / Edit Gateway</h3>
+                        <form id="gateway-form" class="space-y-4">
+                            <input type="hidden" id="edit-id">
+                            <div>
+                                <label for="gatewayId" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="gatewayId">Gateway ID</label>
+                                <input type="text" id="gatewayId" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label for="gatewayName" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="gatewayName">Gateway Name</label>
+                                <input type="text" id="gatewayName" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="latitude" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="latitude">Latitude</label>
+                                    <input type="number" step="any" id="latitude" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                                <div>
+                                    <label for="longitude" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="longitude">Longitude</label>
+                                    <input type="number" step="any" id="longitude" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                            </div>
+                            <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                                <button type="submit" class="btn-primary py-3 px-6 rounded-lg font-medium flex-1 flex items-center justify-center gap-2" data-i18n="saveGateway">
+                                    <i class="fas fa-save"></i> Save Gateway
+                                </button>
+                                <button type="button" id="clear-form-btn" class="py-3 px-6 rounded-lg font-medium border border-gray-300 hover:bg-gray-50 flex-1 flex items-center justify-center gap-2" data-i18n="clear">
+                                    <i class="fas fa-times"></i> Clear
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Configured Gateways Table -->
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold mb-4" data-i18n="configuredGateways">Configured Gateways</h3>
+                        <div class="overflow-y-auto max-h-[350px]">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50 sticky top-0">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase" data-i18n="id">ID</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase" data-i18n="gatewayName">Name</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase" data-i18n="actions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="config-gateways-tbody" class="bg-white divide-y divide-gray-200">
+                                    <tr class="hover:bg-indigo-50">
+                                        <td class="px-4 py-3 font-medium">gateway1</td>
+                                        <td class="px-4 py-3 text-gray-600">ที่ทำการไปรษณีย์หลักสี่</td>
+                                        <td class="px-4 py-3 space-x-2">
+                                            <button class="edit-btn text-indigo-600 hover:text-indigo-900" data-id="gateway1">
+                                                <i class="fas fa-edit mr-1"></i><span data-i18n="edit">Edit</span>
+                                            </button>
+                                            <button class="delete-btn text-red-600 hover:text-red-900" data-id="gateway1">
+                                                <i class="fas fa-trash-alt mr-1"></i><span data-i18n="delete">Delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-indigo-50">
+                                        <td class="px-4 py-3 font-medium">gateway2</td>
+                                        <td class="px-4 py-3 text-gray-600">ไปรษณีย์ไทย สาขาปทุมธานี</td>
+                                        <td class="px-4 py-3 space-x-2">
+                                            <button class="edit-btn text-indigo-600 hover:text-indigo-900" data-id="gateway2">
+                                                <i class="fas fa-edit mr-1"></i><span data-i18n="edit">Edit</span>
+                                            </button>
+                                            <button class="delete-btn text-red-600 hover:text-red-900" data-id="gateway2">
+                                                <i class="fas fa-trash-alt mr-1"></i><span data-i18n="delete">Delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <!-- Floating Action Button -->
+    <div class="fab" id="scroll-top">
+        <i class="fas fa-arrow-up text-xl"></i>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DATA STORE ---
+            let liveData = {
+                gateways: {
+                    "gateway1": { id: "gateway1", name: "ที่ทำการไปรษณีย์หลักสี่", status: "ONLINE", lat: 13.8897, lon: 100.5817 },
+                    "gateway2": { id: "gateway2", name: "ไปรษณีย์ไทย สาขาปทุมธานี", status: "ONLINE", lat: 14.0223, lon: 100.5300 }
+                },
+                dollies: {}
+            };
+            
+            let configuredGateways = {
+                "gateway1": { id: "gateway1", name: "ที่ทำการไปรษณีย์หลักสี่", lat: 13.8897, lon: 100.5817 },
+                "gateway2": { id: "gateway2", name: "ไปรษณีย์ไทย สาขาปทุมธานี", lat: 14.0223, lon: 100.5300 }
+            };
+            
+            let messageCount = 0;
+            let prevDeviceCount = 0;
+            let startTime = Date.now();
+
+            // --- CHART & MAP INSTANCES ---
+            let gatewaysChartInstance = null;
+            let dolliesChartInstance = null;
+            let map = null;
+            const mapMarkers = {};
+            const dollyMapMarkers = {};
+            let socket = null;
+
+            // --- DOM ELEMENTS ---
+            const gatewaysTbody = document.getElementById('gateways-tbody');
+            const dolliesTbody = document.getElementById('dollies-tbody');
+            const configGatewaysTbody = document.getElementById('config-gateways-tbody');
+            const gatewayForm = document.getElementById('gateway-form');
+            const mqttStatusText = document.getElementById('mqtt-status-text');
+            const mqttStatusIndicator = document.querySelector('.connection-indicator');
+            const currentTimeEl = document.getElementById('current-time');
+            const scrollTopBtn = document.getElementById('scroll-top');
+            const resetMapBtn = document.getElementById('reset-map');
+            const totalDevicesEl = document.getElementById('total-devices');
+            const deviceChangeEl = document.getElementById('device-change');
+            const messagesReceivedEl = document.getElementById('messages-received');
+            const uptimeEl = document.getElementById('uptime');
+
+            // --- LANGUAGE FUNCTIONS ---
+            function setLanguage(lang) {
+                currentLang = lang;
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (translations[lang][key]) {
+                        el.textContent = translations[lang][key];
+                    }
+                });
+                
+                if (lang === 'th') {
+                    document.body.classList.add('thai-lang');
+                } else {
+                    document.body.classList.remove('thai-lang');
+                }
+                
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById(`lang-${lang}`).classList.add('active');
+                
+                // Update chart labels if charts exist
+                if (gatewaysChartInstance) {
+                    gatewaysChartInstance.destroy();
+                    gatewaysChartInstance = null;
+                }
+                if (dolliesChartInstance) {
+                    dolliesChartInstance.destroy();
+                    dolliesChartInstance = null;
+                }
+                renderCharts();
+            }
+            
+            // --- REAL-TIME CLOCK FOR THAILAND (GMT+7) ---
+            function updateClock() {
+                const now = new Date();
+                const thaiTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+                
+                const hours = thaiTime.getUTCHours().toString().padStart(2, '0');
+                const minutes = thaiTime.getUTCMinutes().toString().padStart(2, '0');
+                const seconds = thaiTime.getUTCSeconds().toString().padStart(2, '0');
+                
+                currentTimeEl.textContent = `${hours}:${minutes}:${seconds} +07:00`;
+                
+                // Update uptime
+                const elapsed = (Date.now() - startTime) / 1000; // in seconds
+                const hoursRunning = Math.floor(elapsed / 3600);
+                const minutesRunning = Math.floor((elapsed % 3600) / 60);
+                uptimeEl.textContent = "100"; // Simplified for demo
+            }
+            
+            // --- MQTT CONNECTION VIA WEBSOCKET PROXY ---
+            function connectToMQTT() {
+                const WS_PROXY_URL = 'ws://localhost:9001'; 
+                
+                // Update status
+                mqttStatusText.textContent = translations[currentLang].connecting;
+                mqttStatusText.className = 'font-bold text-yellow-500';
+                mqttStatusIndicator.className = 'connection-indicator connecting';
+                
+                try {
+                    socket = new WebSocket(WS_PROXY_URL);
+                } catch (e) {
+                    console.error("WebSocket connection initiation error:", e);
+                    mqttStatusText.textContent = translations[currentLang].disconnected;
+                    mqttStatusText.className = 'font-bold text-red-600';
+                    mqttStatusIndicator.className = 'connection-indicator disconnected';
+                    return;
+                }
+
+                socket.onopen = () => {
+                    console.log('WebSocket connection to proxy established!');
+                    mqttStatusText.textContent = translations[currentLang].connected;
+                    mqttStatusText.className = 'font-bold text-green-600';
+                    mqttStatusIndicator.className = 'connection-indicator connected';
+                };
+
+                socket.onmessage = (event) => {
+                    try {
+                        messageCount++;
+                        const data = JSON.parse(event.data);
+                        
+                        // Handle error message from proxy
+                        if (data.error) {
+                            console.error('Error from proxy:', data.error);
+                            mqttStatusText.innerHTML = `Proxy Error: ${data.error}`;
+                            mqttStatusText.className = 'font-bold text-red-600';
+                            return;
+                        }
+
+                        // Process MQTT message
+                        const { topic, payload } = data;
+                        let actualPayload;
+                        
+                        try {
+                            actualPayload = JSON.parse(payload);
+                        } catch (parseError) {
+                            console.error(`Could not parse MQTT payload:`, payload, parseError);
+                            actualPayload = { _raw_payload_string: payload };
+                        }
+                        
+                        console.log(`Received MQTT message on topic ${topic}:`, actualPayload);
+                        
+                        let updatedElementId = null;
+                        let deviceId = null;
+
+                        // Handle different MQTT topics
+                        if (topic === 'heltec/lora/data' && typeof actualPayload === 'object') {
+                            const { gateway_id, rssi, node_id } = actualPayload;
+                            if (node_id) {
+                                deviceId = node_id;
+                                liveData.dollies[node_id] = {
+                                    ...liveData.dollies[node_id],
+                                    id: node_id,
+                                    gatewayId: gateway_id,
+                                    rssi: rssi,
+                                    distance: calculateDistance(rssi),
+                                    status: 'ONLINE',
+                                    lastSeen: Date.now()
+                                };
+                                updatedElementId = `dolly-row-${node_id}`;
+                            }
+                            if (gateway_id) {
+                                deviceId = gateway_id;
+                                liveData.gateways[gateway_id] = {
+                                    ...liveData.gateways[gateway_id],
+                                    id: gateway_id,
+                                    status: 'ONLINE',
+                                    lastSeen: Date.now()
+                                };
+                                updatedElementId = `gw-row-${gateway_id}`;
+                            }
+                        } 
+                        else if (topic.startsWith('heltec/gateway/') && topic.endsWith('/status')) {
+                            const { gateway_id, status } = actualPayload;
+                            if (gateway_id) {
+                                deviceId = gateway_id;
+                                liveData.gateways[gateway_id] = {
+                                    ...liveData.gateways[gateway_id],
+                                    id: gateway_id,
+                                    status: status,
+                                    lastSeen: Date.now()
+                                };
+                                updatedElementId = `gw-row-${gateway_id}`;
+                            }
+                        } 
+                        else if (topic.startsWith('heltec/nodes/') && topic.endsWith('/status')) {
+                            const { node_id, status, gateway_id } = actualPayload;
+                            if (node_id) {
+                                deviceId = node_id;
+                                liveData.dollies[node_id] = {
+                                    ...liveData.dollies[node_id],
+                                    id: node_id,
+                                    status: status,
+                                    gatewayId: gateway_id || liveData.dollies[node_id]?.gatewayId,
+                                    lastSeen: Date.now()
+                                };
+                                updatedElementId = `dolly-row-${node_id}`;
+                            }
+                        }
+
+                        // Update UI if we have a valid message
+                        if (deviceId) {
+                            renderAll();
+                            
+                            // Highlight updated row
+                            if (updatedElementId) {
+                                const rowElement = document.getElementById(updatedElementId);
+                                if (rowElement) {
+                                    rowElement.classList.remove('highlight');
+                                    void rowElement.offsetWidth;
+                                    rowElement.classList.add('highlight');
+                                }
+                            }
+                        }
+
+                    } catch (e) {
+                        console.error("Error processing WebSocket message:", e);
+                    }
+                };
+
+                socket.onclose = (event) => {
+                    console.log('WebSocket connection closed:', event);
+                    mqttStatusText.textContent = translations[currentLang].disconnected;
+                    mqttStatusText.className = 'font-bold text-red-600';
+                    mqttStatusIndicator.className = 'connection-indicator disconnected';
+                    
+                    // Attempt to reconnect after a delay
+                    setTimeout(connectToMQTT, 3000);
+                };
+
+                socket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    mqttStatusText.textContent = translations[currentLang].disconnected;
+                    mqttStatusText.className = 'font-bold text-red-600';
+                    mqttStatusIndicator.className = 'connection-indicator disconnected';
+                    socket.close();
+                };
+            }
+            
+            // --- HELPER FUNCTIONS ---
+            function calculateDistance(rssi) {
+                if (!rssi || rssi >= 0) return 0;
+                const txPower = -59; // dBm at 1 meter
+                const n = 2.5; // Environmental factor
+                return Math.pow(10, (txPower - rssi) / (10 * n)).toFixed(2);
+            }
+            
+            function updateStats() {
+                const totalDevices = Object.keys(liveData.gateways).length + Object.keys(liveData.dollies).length;
+                const deviceChange = totalDevices - prevDeviceCount;
+                
+                totalDevicesEl.textContent = totalDevices;
+                deviceChangeEl.textContent = Math.abs(deviceChange);
+                
+                if (deviceChange > 0) {
+                    deviceChangeEl.className = "text-sm font-normal text-green-600";
+                    deviceChangeEl.innerHTML = `<i class="fas fa-arrow-up mr-1"></i>${deviceChange}`;
+                } else if (deviceChange < 0) {
+                    deviceChangeEl.className = "text-sm font-normal text-red-600";
+                    deviceChangeEl.innerHTML = `<i class="fas fa-arrow-down mr-1"></i>${Math.abs(deviceChange)}`;
+                } else {
+                    deviceChangeEl.className = "text-sm font-normal text-gray-600";
+                    deviceChangeEl.innerHTML = `<i class="fas fa-minus mr-1"></i>0`;
+                }
+                
+                prevDeviceCount = totalDevices;
+                messagesReceivedEl.textContent = Math.floor(messageCount / ((Date.now() - startTime) / 60000));
+                
+                // Update every minute
+                setTimeout(updateStats, 60000);
+            }
+
+            // --- RENDER FUNCTIONS ---
+            function renderAll() {
+                renderKPIs();
+                renderCharts();
+                renderTables();
+                renderConfigTable();
+                renderMap();
+            }
+
+            function renderKPIs() {
+                const totalGateways = Object.keys(liveData.gateways).length;
+                const onlineGateways = Object.values(liveData.gateways).filter(g => g.status === 'ONLINE').length;
+                const totalDollies = Object.keys(liveData.dollies).length;
+                const onlineDollies = Object.values(liveData.dollies).filter(d => d.status === 'ONLINE').length;
+
+                document.getElementById('total-gateways').textContent = totalGateways;
+                document.getElementById('online-gateways').textContent = onlineGateways;
+                document.getElementById('total-dollies').textContent = totalDollies;
+                document.getElementById('online-dollies').textContent = onlineDollies;
+            }
+
+            function renderCharts() {
+                const gatewayData = {
+                    online: Object.values(liveData.gateways).filter(g => g.status === 'ONLINE').length,
+                    offline: Object.values(liveData.gateways).filter(g => g.status !== 'ONLINE').length,
+                };
+                const dollyData = {
+                    online: Object.values(liveData.dollies).filter(d => d.status === 'ONLINE').length,
+                    offline: Object.values(liveData.dollies).filter(d => d.status !== 'ONLINE').length,
+                };
+
+                const chartConfig = (data, label) => ({
+                    type: 'doughnut',
+                    data: {
+                        labels: [translations[currentLang].online, translations[currentLang].offline],
+                        datasets: [{
+                            label: label,
+                            data: [data.online, data.offline],
+                            backgroundColor: ['#10b981', '#ef4444'],
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: {
+                                        family: currentLang === 'th' ? "'Noto Sans Thai', sans-serif" : "'Inter', sans-serif",
+                                        size: 14
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.label}: ${context.raw}`;
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '60%'
+                    }
+                });
+
+                if (gatewaysChartInstance) gatewaysChartInstance.destroy();
+                gatewaysChartInstance = new Chart(document.getElementById('gatewaysChart').getContext('2d'), chartConfig(gatewayData, 'Gateways'));
+
+                if (dolliesChartInstance) dolliesChartInstance.destroy();
+                dolliesChartInstance = new Chart(document.getElementById('dolliesChart').getContext('2d'), chartConfig(dollyData, 'Dollies'));
+            }
+
+            function renderTables() {
+                // Gateways Table
+                gatewaysTbody.innerHTML = '';
+                Object.values(liveData.gateways).forEach(gw => {
+                    const statusClass = gw.status === 'ONLINE' ? 'text-green-600' : 'text-red-600';
+                    const statusIcon = gw.status === 'ONLINE' ? '<span class="pulse-online mr-2"></span>' : '<i class="fas fa-circle text-red-500 mr-2"></i>';
+                    const row = `
+                        <tr id="gw-row-${gw.id}" class="hover:bg-indigo-50">
+                            <td class="px-4 py-3 font-medium">${gw.id}</td>
+                            <td class="px-4 py-3 font-bold ${statusClass}">${statusIcon}${gw.status}</td>
+                        </tr>
+                    `;
+                    gatewaysTbody.insertAdjacentHTML('beforeend', row);
+                });
+
+                // Dollies Table
+                dolliesTbody.innerHTML = '';
+                Object.values(liveData.dollies).forEach(dolly => {
+                    const statusClass = dolly.status === 'ONLINE' ? 'text-green-600' : 'text-red-600';
+                    const statusIcon = dolly.status === 'ONLINE' ? '<span class="pulse-online mr-2"></span>' : '<i class="fas fa-circle text-red-500 mr-2"></i>';
+                    const row = `
+                        <tr id="dolly-row-${dolly.id}" class="hover:bg-indigo-50">
+                            <td class="px-4 py-3 font-medium">${dolly.id}</td>
+                            <td class="px-4 py-3 font-bold ${statusClass}">${statusIcon}${dolly.status}</td>
+                            <td class="px-4 py-3 text-gray-600">${dolly.gatewayId || 'N/A'}</td>
+                            <td class="px-4 py-3 text-gray-600">${dolly.rssi !== undefined ? dolly.rssi : 'N/A'}</td>
+                        </tr>
+                    `;
+                    dolliesTbody.insertAdjacentHTML('beforeend', row);
+                });
+            }
+
+            function renderConfigTable() {
+                configGatewaysTbody.innerHTML = '';
+                Object.values(configuredGateways).forEach(gw => {
+                    const row = `
+                        <tr class="hover:bg-indigo-50">
+                            <td class="px-4 py-3 font-medium">${gw.id}</td>
+                            <td class="px-4 py-3 text-gray-600">${gw.name}</td>
+                            <td class="px-4 py-3 space-x-2">
+                                <button class="edit-btn text-indigo-600 hover:text-indigo-900" data-id="${gw.id}">
+                                    <i class="fas fa-edit mr-1"></i><span data-i18n="edit">Edit</span>
+                                </button>
+                                <button class="delete-btn text-red-600 hover:text-red-900" data-id="${gw.id}">
+                                    <i class="fas fa-trash-alt mr-1"></i><span data-i18n="delete">Delete</span>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    configGatewaysTbody.insertAdjacentHTML('beforeend', row);
+                });
+
+                // Re-attach event listeners
+                document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEdit));
+                document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDelete));
+                
+                // Update translations
+                setLanguage(currentLang);
+            }
+            
+            function createDollyIcon(status, id = '') {
+                let statusClass = 'unknown';
+                if (status === 'ONLINE') statusClass = 'online';
+                else if (status === 'OFFLINE') statusClass = 'offline';
+                
+                return L.divIcon({
+                    className: 'custom-dolly-icon',
+                    html: `<div class="dolly-icon ${statusClass}">${id.substring(id.length - 1)}</div>`,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                });
+            }
+
+            function renderMap() {
+                if (!map) {
+                    map = L.map('map').setView([13.736717, 100.523186], 11);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(map);
+                    
+                    // Add reset button functionality
+                    resetMapBtn.addEventListener('click', () => {
+                        map.setView([13.736717, 100.523186], 11);
+                    });
+                } else {
+                    map.eachLayer(layer => {
+                        if (layer instanceof L.Marker) {
+                            map.removeLayer(layer);
+                        }
+                    });
+                }
+
+                // Render Gateway Markers
+                Object.values(liveData.gateways).forEach(gw => {
+                    if (gw.lat && gw.lon) {
+                        const popupContent = `
+                            <b>${gw.name} (${gw.id})</b><br>
+                            Status: ${gw.status}
+                        `;
+                        const iconColor = gw.status === 'ONLINE' ? 'green' : 'red';
+                        const markerIcon = L.icon({
+                            iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColor}.png`,
+                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                            shadowSize: [41, 41]
+                        });
+
+                        const marker = L.marker([gw.lat, gw.lon], { icon: markerIcon }).addTo(map)
+                            .bindPopup(popupContent);
+                        mapMarkers[gw.id] = marker;
+                    }
+                });
+
+                // Render Dolly Markers
+                Object.values(liveData.dollies).forEach(dolly => {
+                    const gateway = liveData.gateways[dolly.gatewayId];
+                    if (gateway && gateway.lat && gateway.lon) {
+                        const popupContent = `
+                            <b>Dolly ID: ${dolly.id}</b><br>
+                            Status: ${dolly.status}<br>
+                            Gateway: ${dolly.gatewayId || 'N/A'}<br>
+                            RSSI: ${dolly.rssi !== undefined ? dolly.rssi : 'N/A'} dBm<br>
+                            Distance: ${dolly.distance || 'N/A'} m
+                        `;
+                        const dollyIcon = createDollyIcon(dolly.status, dolly.id);
+
+                        const marker = L.marker([gateway.lat, gateway.lon], { icon: dollyIcon }).addTo(map)
+                            .bindPopup(popupContent);
+                        dollyMapMarkers[dolly.id] = marker;
+                    }
+                });
+
+                map.invalidateSize();
+            }
+
+            // --- EVENT HANDLERS ---
+            function handleTabSwitch(e) {
+                const currentActiveMainButton = document.querySelector('.main-tab-button.active');
+                if (currentActiveMainButton) {
+                    currentActiveMainButton.classList.remove('active');
+                }
+
+                const currentVisibleContent = document.querySelector('.tab-content:not(.hidden)');
+                if (currentVisibleContent) {
+                    currentVisibleContent.classList.add('hidden');
+                }
+
+                e.target.classList.add('active');
+                const targetTabId = e.target.dataset.tab;
+                
+                const newVisibleContent = document.getElementById(targetTabId);
+                if (newVisibleContent) {
+                    newVisibleContent.classList.remove('hidden');
+                }
+
+                if (targetTabId === 'live-data' && map) {
+                    map.invalidateSize();
+                }
+            }
+
+            function handleSubTabSwitch(e) {
+                const showGatewaysBtn = document.getElementById('show-gateways-btn');
+                const showDolliesBtn = document.getElementById('show-dollies-btn');
+                const gatewaysTableContainer = document.getElementById('gateways-table-container');
+                const dolliesTableContainer = document.getElementById('dollies-table-container');
+
+                if (showGatewaysBtn && showDolliesBtn && gatewaysTableContainer && dolliesTableContainer) {
+                    if (e.target.id === 'show-gateways-btn') {
+                        gatewaysTableContainer.classList.remove('hidden');
+                        dolliesTableContainer.classList.add('hidden');
+                        showGatewaysBtn.classList.add('bg-indigo-50', 'text-indigo-700');
+                        showDolliesBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
+                    } else if (e.target.id === 'show-dollies-btn') {
+                        gatewaysTableContainer.classList.add('hidden');
+                        dolliesTableContainer.classList.remove('hidden');
+                        showGatewaysBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
+                        showDolliesBtn.classList.add('bg-indigo-50', 'text-indigo-700');
+                    }
+                }
+            }
+
+            function handleFormSubmit(e) {
+                e.preventDefault();
+                const editId = document.getElementById('edit-id').value;
+                const gatewayId = document.getElementById('gatewayId').value;
+                const gatewayName = document.getElementById('gatewayName').value;
+                const latitude = parseFloat(document.getElementById('latitude').value);
+                const longitude = parseFloat(document.getElementById('longitude').value);
+
+                if (!gatewayId || !gatewayName || isNaN(latitude) || isNaN(longitude)) {
+                    alert('Please fill all gateway fields correctly.');
+                    return;
+                }
+
+                const newConfigGateway = {
+                    id: gatewayId,
+                    name: gatewayName,
+                    lat: latitude,
+                    lon: longitude
+                };
+
+                if (editId && editId !== gatewayId) {
+                    delete configuredGateways[editId];
+                    delete liveData.gateways[editId];
+                }
+                
+                configuredGateways[gatewayId] = newConfigGateway;
+                liveData.gateways[gatewayId] = { ...liveData.gateways[gatewayId] || { status: 'UNKNOWN' }, ...newConfigGateway };
+
+                renderAll();
+                gatewayForm.reset();
+                document.getElementById('edit-id').value = '';
+            }
+
+            function handleClearForm() {
+                gatewayForm.reset();
+                document.getElementById('edit-id').value = '';
+            }
+            
+            function handleEdit(e) {
+                const id = e.target.closest('.edit-btn').dataset.id;
+                const gateway = configuredGateways[id];
+                if (gateway) {
+                    document.getElementById('edit-id').value = id;
+                    document.getElementById('gatewayId').value = gateway.id;
+                    document.getElementById('gatewayName').value = gateway.name;
+                    document.getElementById('latitude').value = gateway.lat;
+                    document.getElementById('longitude').value = gateway.lon;
+                }
+            }
+
+            function handleDelete(e) {
+                 const id = e.target.closest('.delete-btn').dataset.id;
+                 if (confirm(`Are you sure you want to delete configured gateway ${id}?`)) {
+                    delete configuredGateways[id];
+                    delete liveData.gateways[id];
+                    renderAll();
+                 }
+            }
+            
+            // --- INITIALIZATION ---
+            function init() {
+                // Setup tab event listeners
+                document.querySelectorAll('.main-tab-button').forEach(button => {
+                    button.addEventListener('click', handleTabSwitch);
+                });
+                
+                // Setup sub-tab event listeners
+                document.getElementById('show-gateways-btn').addEventListener('click', handleSubTabSwitch);
+                document.getElementById('show-dollies-btn').addEventListener('click', handleSubTabSwitch);
+                
+                // Setup form and config table listeners
+                gatewayForm.addEventListener('submit', handleFormSubmit);
+                document.getElementById('clear-form-btn').addEventListener('click', handleClearForm);
+                
+                // Setup language
+                setLanguage('en');
+                
+                // Setup scroll to top button
+                scrollTopBtn.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+                
+                // Start clock and stats
+                setInterval(updateClock, 1000);
+                updateClock();
+                startTime = Date.now();
+                updateStats();
+                
+                // Initial render
+                renderAll();
+                
+                // Connect to MQTT via proxy
+                connectToMQTT();
+            }
+
+            init();
+        });
+    </script>
+</body>
+</html>
