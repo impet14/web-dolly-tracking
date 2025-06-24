@@ -24,53 +24,63 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        /* Custom CSS Variables for easy theming */
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #3730a3;
-            --primary-light: #818cf8;
-            --secondary: #0ea5e9;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --dark: #1e293b;
-            --light: #f8fafc;
+            --primary: #4f46e5; /* Indigo 600 */
+            --primary-dark: #3730a3; /* Indigo 800 */
+            --primary-light: #818cf8; /* Indigo 400 */
+            --secondary: #0ea5e9; /* Sky 500 */
+            --success: #10b981; /* Green 600 */
+            --danger: #ef4444; /* Red 500 */
+            --warning: #f59e0b; /* Amber 500 */
+            --dark: #1e293b; /* Slate 800 */
+            --light: #f8fafc; /* Slate 50 */
         }
         
+        /* Base body styling with gradients and Inter font */
         body {
             font-family: 'Inter', 'Noto Sans Thai', sans-serif;
-            background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
+            background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%); /* Light blue to off-white gradient */
             color: var(--dark);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
+        /* Thai language specific font override */
         .thai-lang {
             font-family: 'Noto Sans Thai', sans-serif;
         }
         
+        /* Card styling with shadow, blur, and subtle border */
         .card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.85); /* Slightly transparent white */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
             border-radius: 16px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(226, 232, 240, 0.4);
+            transition: all 0.3s ease; /* Smooth transitions for hover effects */
+            border: 1px solid rgba(226, 232, 240, 0.4); /* Light border */
         }
         
+        /* Card hover effect */
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
         }
         
+        /* KPI card specific styling */
         .kpi-card {
-            background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+            background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%); /* Light blue gradient */
             border-left: 4px solid var(--primary);
         }
         
+        /* Online KPI card specific styling */
         .online-card {
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); /* Light green gradient */
             border-left: 4px solid var(--success);
         }
         
+        /* Chart container to manage aspect ratio */
         .chart-container {
             position: relative;
             width: 100%;
@@ -78,47 +88,58 @@
             max-height: 350px;
         }
         
+        /* Map styling */
         #map {
             height: 100%;
             min-height: 500px;
             border-radius: 16px;
-            z-index: 10;
+            z-index: 10; /* Ensure map is above other elements when needed */
         }
         
+        /* Main tab button styling */
         .main-tab-button {
             flex: 1;
             padding: 1rem;
             font-weight: 600;
-            color: #4b5563;
+            color: #4b5563; /* Gray 700 */
             border-top-left-radius: 0.5rem;
             border-top-right-radius: 0.5rem;
             transition: all 0.3s ease;
             cursor: pointer;
             text-align: center;
             border-bottom: 3px solid transparent;
-            background: rgba(226, 232, 240, 0.5);
+            background: rgba(226, 232, 240, 0.5); /* Light gray transparent */
         }
         
+        /* Main tab button hover effect */
         .main-tab-button:hover {
-            background: rgba(224, 231, 255, 0.7);
+            background: rgba(224, 231, 255, 0.7); /* Light indigo transparent */
             color: var(--primary-dark);
         }
         
+        /* Active main tab button styling */
         .main-tab-button.active {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.95); /* Nearly opaque white */
             color: var(--primary);
-            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05); /* Shadow for active tab */
             border-bottom: 3px solid var(--primary);
             font-weight: 700;
         }
+
+        /* Sub-tab button active styling */
+        .tab-button.active {
+            background: #e0e7ff; /* bg-indigo-50 */
+            color: #4f46e5; /* text-indigo-700 */
+        }
         
+        /* Pulse animation for online indicators */
         .pulse-online {
             display: inline-block;
             width: 10px;
             height: 10px;
             border-radius: 50%;
             background: var(--success);
-            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); /* Green shadow */
             animation: pulse-green 2s infinite;
         }
         
@@ -139,6 +160,7 @@
             }
         }
         
+        /* Primary button styling */
         .btn-primary {
             background: var(--primary);
             color: white;
@@ -150,6 +172,7 @@
             transform: translateY(-2px);
         }
         
+        /* Floating action button (FAB) for scroll to top */
         .fab {
             position: fixed;
             bottom: 2rem;
@@ -168,13 +191,15 @@
             transition: all 0.3s ease;
         }
         
+        /* FAB hover effect */
         .fab:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.25);
         }
         
+        /* Animation for highlighting table rows on update */
         @keyframes highlight-row {
-            0% { background-color: rgba(254, 249, 195, 0.8); }
+            0% { background-color: rgba(254, 249, 195, 0.8); } /* Light yellow */
             100% { background-color: transparent; }
         }
         
@@ -182,6 +207,7 @@
             animation: highlight-row 2s ease-out;
         }
         
+        /* Language toggle styling */
         .lang-toggle {
             position: absolute;
             top: 1rem;
@@ -206,19 +232,21 @@
             color: white;
         }
         
+        /* Custom dolly icon for Leaflet map */
         .dolly-icon {
-            width: 20px;
-            height: 20px;
+            width: 28px; /* Increased size for better visibility */
+            height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-size: 0.9rem; /* Increased font size */
             font-weight: bold;
             color: white;
             border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Stronger shadow for distinction */
             transition: background-color 0.3s ease;
+            cursor: pointer; /* Indicate interactivity */
         }
         
         .dolly-icon.online {
@@ -230,9 +258,10 @@
         }
         
         .dolly-icon.unknown {
-            background-color: #6b7280;
+            background-color: #6b7280; /* Gray 500 */
         }
         
+        /* Connection status indicator dots */
         .connection-indicator {
             display: inline-block;
             width: 10px;
@@ -244,6 +273,145 @@
         .connected { background-color: var(--success); }
         .connecting { background-color: var(--warning); }
         .disconnected { background-color: var(--danger); }
+
+        /* Modal styling */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2.5rem; /* Increased padding */
+            border-radius: 16px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 450px; /* Slightly wider */
+            width: 90%;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem; /* Space between buttons */
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        .modal-buttons button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .modal-buttons .btn-confirm {
+            background-color: var(--danger);
+            color: white;
+        }
+        .modal-buttons .btn-confirm:hover {
+            background-color: #c23131; /* Darker red */
+        }
+        .modal-buttons .btn-cancel {
+            background-color: #e2e8f0; /* Gray 200 */
+            color: #475569; /* Slate 700 */
+        }
+        .modal-buttons .btn-cancel:hover {
+            background-color: #cbd5e1; /* Gray 300 */
+        }
+        .modal-buttons .btn-alert {
+            background-color: var(--primary);
+            color: white;
+            flex-grow: 1; /* Make it fill space */
+        }
+        .modal-buttons .btn-alert:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Message Rate animation */
+        .message-rate-text {
+            display: inline-block;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Custom scrollbar for tables */
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Notification bar styling */
+        #notification-bar {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto; /* Adjust width dynamically */
+            max-width: 90%;
+            min-width: 300px;
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            text-align: center;
+            z-index: 1001; /* Above modal */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        #notification-bar.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        #notification-bar .icon {
+            font-size: 1.2rem;
+        }
+        #notification-bar.success { background-color: var(--success); }
+        #notification-bar.error { background-color: var(--danger); }
+        #notification-bar.warning { background-color: var(--warning); }
+        #notification-bar.info { background-color: var(--primary); }
     </style>
     
     <script>
@@ -255,6 +423,7 @@
                 dashboard: "Dashboard Overview",
                 liveData: "Live Map & Data",
                 configuration: "Configuration",
+                historicalTrends: "Historical Trends", // New tab translation
                 networkHealth: "Network Health Overview",
                 networkDesc: "Real-time status of your dolly network",
                 totalGateways: "TOTAL GATEWAYS",
@@ -292,8 +461,35 @@
                 connected: "Connected",
                 disconnected: "Disconnected",
                 resetMap: "Reset Map View",
-                dataFlow: "Real-time Data Flow",
-                connectedDevices: "Connected Devices"
+                dataFlow: "Real-time Data Flow (msg/min)",
+                connectedDevices: "Connected Devices",
+                distance: "Distance (m)",
+                lastSeen: "Last Seen",
+                unknown: "Unknown",
+                alertFillAllFields: "Please fill in all fields.",
+                alertDeleteConfirm: "Are you sure you want to delete gateway",
+                modalOk: "OK",
+                modalConfirm: "Confirm",
+                modalCancel: "Cancel",
+                modalAlertTitle: "Notification",
+                modalConfirmTitle: "Confirm Action",
+                noGatewaysConfigured: "No gateways configured. Please add one using the form above.",
+                noGatewaysLive: "No gateways are currently reporting data.",
+                noDolliesLive: "No dollies are currently reporting data.",
+                searchById: "Search by ID...",
+                gatewaySaved: "Gateway successfully saved!",
+                gatewayDeleted: "Gateway successfully deleted!",
+                mqttConnected: "MQTT Connected!",
+                mqttDisconnected: "MQTT Disconnected!",
+                mqttError: "MQTT Connection Error!",
+                justNow: "just now",
+                minutesAgo: "mins ago",
+                hoursAgo: "hours ago",
+                yesterday: "Yesterday",
+                daysAgo: "days ago",
+                hourlyMessageRate: "Hourly Message Rate",
+                gatewayOnlinePercentage: "Gateway Online Percentage",
+                dollyOnlinePercentage: "Dolly Online Percentage" // New translation
             },
             th: {
                 title: "แดชบอร์ดติดตามรถเข็น",
@@ -301,6 +497,7 @@
                 dashboard: "ภาพรวมแดชบอร์ด",
                 liveData: "แผนที่และข้อมูลสด",
                 configuration: "การกำหนดค่า",
+                historicalTrends: "แนวโน้มย้อนหลัง", // New tab translation
                 networkHealth: "สถานะเครือข่าย",
                 networkDesc: "ข้อมูลเครือข่ายรถเข็นแบบเรียลไทม์",
                 totalGateways: "เกตเวย์ทั้งหมด",
@@ -338,8 +535,35 @@
                 connected: "เชื่อมต่อแล้ว",
                 disconnected: "ตัดการเชื่อมต่อ",
                 resetMap: "รีเซ็ตมุมมองแผนที่",
-                dataFlow: "การไหลของข้อมูล",
-                connectedDevices: "อุปกรณ์ที่เชื่อมต่อ"
+                dataFlow: "การไหลของข้อมูล (ข้อความ/นาที)",
+                connectedDevices: "อุปกรณ์ที่เชื่อมต่อ",
+                distance: "ระยะทาง (ม.)",
+                lastSeen: "อัปเดตล่าสุด",
+                unknown: "ไม่ทราบ",
+                alertFillAllFields: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                alertDeleteConfirm: "คุณแน่ใจหรือไม่ที่จะลบเกตเวย์",
+                modalOk: "ตกลง",
+                modalConfirm: "ยืนยัน",
+                modalCancel: "ยกเลิก",
+                modalAlertTitle: "แจ้งเตือน",
+                modalConfirmTitle: "ยืนยันการดำเนินการ",
+                noGatewaysConfigured: "ยังไม่ได้กำหนดค่าเกตเวย์ โปรดเพิ่มเกตเวย์โดยใช้ฟอร์มด้านบน",
+                noGatewaysLive: "ขณะนี้ไม่มีเกตเวย์ใดกำลังรายงานข้อมูล",
+                noDolliesLive: "ขณะนี้ไม่มีรถเข็นใดกำลังรายงานข้อมูล",
+                searchById: "ค้นหาด้วยรหัส...",
+                gatewaySaved: "บันทึกเกตเวย์สำเร็จ!",
+                gatewayDeleted: "ลบเกตเวย์สำเร็จ!",
+                mqttConnected: "เชื่อมต่อ MQTT แล้ว!",
+                mqttDisconnected: "ตัดการเชื่อมต่อ MQTT!",
+                mqttError: "ข้อผิดพลาดการเชื่อมต่อ MQTT!",
+                justNow: "เมื่อสักครู่",
+                minutesAgo: "นาทีที่แล้ว",
+                hoursAgo: "ชั่วโมงที่แล้ว",
+                yesterday: "เมื่อวานนี้",
+                daysAgo: "วันที่แล้ว",
+                hourlyMessageRate: "อัตราข้อความรายชั่วโมง",
+                gatewayOnlinePercentage: "เปอร์เซ็นต์เกตเวย์ออนไลน์",
+                dollyOnlinePercentage: "เปอร์เซ็นต์รถเข็นออนไลน์" // New translation
             }
         };
         
@@ -354,11 +578,17 @@
         <div class="lang-btn" id="lang-th">ไทย</div>
     </div>
 
+    <!-- Notification Bar -->
+    <div id="notification-bar" class="hidden">
+        <span class="icon"></span>
+        <span id="notification-message"></span>
+    </div>
+
     <!-- Main Container -->
     <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl">
         <!-- Header -->
         <header class="mb-8 text-center card p-6 relative overflow-hidden">
-            <!-- Decorative elements -->
+            <!-- Decorative elements for visual appeal -->
             <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
             <div class="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-indigo-100 opacity-50"></div>
             <div class="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-blue-100 opacity-50"></div>
@@ -379,7 +609,7 @@
 
         <!-- Stats Overview -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="card p-4 flex items-center">
+            <div class="card p-4 flex items-center transform transition duration-300 hover:scale-105">
                 <div class="bg-indigo-100 p-3 rounded-full mr-4">
                     <i class="fas fa-network-wired text-indigo-600 text-xl"></i>
                 </div>
@@ -389,17 +619,17 @@
                 </div>
             </div>
             
-            <div class="card p-4 flex items-center">
+            <div class="card p-4 flex items-center transform transition duration-300 hover:scale-105">
                 <div class="bg-green-100 p-3 rounded-full mr-4">
                     <i class="fas fa-signal text-green-600 text-xl"></i>
                 </div>
                 <div>
-                    <div class="text-sm text-gray-500" data-i18n="dataFlow">Real-time Data Flow</div>
-                    <div class="text-2xl font-bold"><span id="messages-received">0</span> <span class="text-sm font-normal">msgs/min</span></div>
+                    <div class="text-sm text-gray-500" data-i18n="dataFlow">Real-time Data Flow (msg/min)</div>
+                    <div class="text-2xl font-bold"><span id="messages-received" class="message-rate-text">0</span></div>
                 </div>
             </div>
             
-            <div class="card p-4 flex items-center">
+            <div class="card p-4 flex items-center transform transition duration-300 hover:scale-105">
                 <div class="bg-blue-100 p-3 rounded-full mr-4">
                     <i class="fas fa-satellite-dish text-blue-600 text-xl"></i>
                 </div>
@@ -415,6 +645,7 @@
             <button id="tab-dashboard" class="main-tab-button active" data-tab="dashboard" data-i18n="dashboard">Dashboard Overview</button>
             <button id="tab-live-data" class="main-tab-button" data-tab="live-data" data-i18n="liveData">Live Map & Data</button>
             <button id="tab-configuration" class="main-tab-button" data-tab="configuration" data-i18n="configuration">Configuration</button>
+            <button id="tab-historical-trends" class="main-tab-button" data-tab="historical-trends" data-i18n="historicalTrends">Historical Trends</button>
         </nav>
 
         <!-- Tab Content Areas -->
@@ -427,21 +658,33 @@
 
                 <!-- KPI Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="card kpi-card p-6">
-                        <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="totalGateways">TOTAL GATEWAYS</h3>
-                        <p id="total-gateways" class="text-3xl font-bold text-indigo-600">2</p>
+                    <div class="card kpi-card p-6 flex items-center justify-between transform transition duration-300 hover:scale-105">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="totalGateways">TOTAL GATEWAYS</h3>
+                            <p id="total-gateways" class="text-3xl font-bold text-indigo-600">0</p>
+                        </div>
+                        <i class="fas fa-hdd text-indigo-300 text-4xl opacity-50"></i>
                     </div>
-                    <div class="card online-card p-6">
-                        <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="onlineGateways">ONLINE GATEWAYS</h3>
-                        <p id="online-gateways" class="text-3xl font-bold text-green-600">2</p>
+                    <div class="card online-card p-6 flex items-center justify-between transform transition duration-300 hover:scale-105">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="onlineGateways">ONLINE GATEWAYS</h3>
+                            <p id="online-gateways" class="text-3xl font-bold text-green-600">0</p>
+                        </div>
+                        <i class="fas fa-wifi text-green-300 text-4xl opacity-50"></i>
                     </div>
-                    <div class="card kpi-card p-6">
-                        <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="totalDollies">TOTAL DOLLIES</h3>
-                        <p id="total-dollies" class="text-3xl font-bold text-indigo-600">0</p>
+                    <div class="card kpi-card p-6 flex items-center justify-between transform transition duration-300 hover:scale-105">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="totalDollies">TOTAL DOLLIES</h3>
+                            <p id="total-dollies" class="text-3xl font-bold text-indigo-600">0</p>
+                        </div>
+                        <i class="fas fa-truck-ramp-box text-indigo-300 text-4xl opacity-50"></i>
                     </div>
-                    <div class="card online-card p-6">
-                        <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="onlineDollies">ONLINE DOLLIES</h3>
-                        <p id="online-dollies" class="text-3xl font-bold text-green-600">0</p>
+                    <div class="card online-card p-6 flex items-center justify-between transform transition duration-300 hover:scale-105">
+                        <div>
+                            <h3 class="text-sm font-semibold text-gray-500 mb-2" data-i18n="onlineDollies">ONLINE DOLLIES</h3>
+                            <p id="online-dollies" class="text-3xl font-bold text-green-600">0</p>
+                        </div>
+                        <i class="fas fa-boxes-stacked text-green-300 text-4xl opacity-50"></i>
                     </div>
                 </div>
 
@@ -474,7 +717,7 @@
                     <!-- Map -->
                     <div class="lg:col-span-3 card p-4 relative">
                         <div id="map"></div>
-                        <button id="reset-map" class="absolute top-4 right-4 z-20 bg-white rounded-full p-2 shadow-md hover:bg-gray-50" title="Reset Map View">
+                        <button id="reset-map" class="absolute top-4 right-4 z-20 bg-white rounded-full p-2 shadow-md hover:bg-gray-50 transition duration-200" title="Reset Map View">
                             <i class="fas fa-sync-alt text-indigo-600"></i>
                         </button>
                     </div>
@@ -490,23 +733,20 @@
 
                         <!-- Gateways Table -->
                         <div id="gateways-table-container">
-                            <div class="overflow-x-auto max-h-[480px]">
+                            <div class="p-2 bg-gray-50 rounded-t-lg">
+                                <input type="text" id="search-gateways" placeholder="Search by ID..." data-i18n-placeholder="searchById" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            </div>
+                            <div class="overflow-x-auto max-h-[480px] custom-scroll">
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50 sticky top-0">
                                         <tr>
                                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="id">ID</th>
                                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="status">Status</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="lastSeen">Last Seen</th>
                                         </tr>
                                     </thead>
                                     <tbody id="gateways-tbody" class="bg-white divide-y divide-gray-200">
-                                        <tr class="hover:bg-indigo-50">
-                                            <td class="px-4 py-3 font-medium">gateway1</td>
-                                            <td class="px-4 py-3 font-bold text-green-600"><span class="pulse-online mr-2"></span>ONLINE</td>
-                                        </tr>
-                                        <tr class="hover:bg-indigo-50">
-                                            <td class="px-4 py-3 font-medium">gateway2</td>
-                                            <td class="px-4 py-3 font-bold text-green-600"><span class="pulse-online mr-2"></span>ONLINE</td>
-                                        </tr>
+                                        <!-- Will be populated by JS -->
                                     </tbody>
                                 </table>
                             </div>
@@ -514,7 +754,10 @@
 
                         <!-- Dollies Table -->
                         <div id="dollies-table-container" class="hidden">
-                            <div class="overflow-x-auto max-h-[480px]">
+                             <div class="p-2 bg-gray-50 rounded-t-lg">
+                                <input type="text" id="search-dollies" placeholder="Search by ID..." data-i18n-placeholder="searchById" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            </div>
+                            <div class="overflow-x-auto max-h-[480px] custom-scroll">
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50 sticky top-0">
                                         <tr>
@@ -522,6 +765,8 @@
                                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="status">Status</th>
                                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="gateway">Gateway</th>
                                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="rssi">RSSI</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="distance">Distance (m)</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="lastSeen">Last Seen</th>
                                         </tr>
                                     </thead>
                                     <tbody id="dollies-tbody" class="bg-white divide-y divide-gray-200">
@@ -550,27 +795,27 @@
                             <input type="hidden" id="edit-id">
                             <div>
                                 <label for="gatewayId" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="gatewayId">Gateway ID</label>
-                                <input type="text" id="gatewayId" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" id="gatewayId" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200">
                             </div>
                             <div>
                                 <label for="gatewayName" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="gatewayName">Gateway Name</label>
-                                <input type="text" id="gatewayName" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" id="gatewayName" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label for="latitude" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="latitude">Latitude</label>
-                                    <input type="number" step="any" id="latitude" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    <input type="number" step="any" id="latitude" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200">
                                 </div>
                                 <div>
                                     <label for="longitude" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="longitude">Longitude</label>
-                                    <input type="number" step="any" id="longitude" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    <input type="number" step="any" id="longitude" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200">
                                 </div>
                             </div>
                             <div class="flex flex-col sm:flex-row gap-4 mt-6">
-                                <button type="submit" class="btn-primary py-3 px-6 rounded-lg font-medium flex-1 flex items-center justify-center gap-2" data-i18n="saveGateway">
+                                <button type="submit" class="btn-primary py-3 px-6 rounded-lg font-medium flex-1 flex items-center justify-center gap-2 transform transition duration-200 hover:scale-[1.02]" data-i18n="saveGateway">
                                     <i class="fas fa-save"></i> Save Gateway
                                 </button>
-                                <button type="button" id="clear-form-btn" class="py-3 px-6 rounded-lg font-medium border border-gray-300 hover:bg-gray-50 flex-1 flex items-center justify-center gap-2" data-i18n="clear">
+                                <button type="button" id="clear-form-btn" class="py-3 px-6 rounded-lg font-medium border border-gray-300 hover:bg-gray-50 flex-1 flex items-center justify-center gap-2 transform transition duration-200 hover:scale-[1.02]" data-i18n="clear">
                                     <i class="fas fa-times"></i> Clear
                                 </button>
                             </div>
@@ -580,7 +825,7 @@
                     <!-- Configured Gateways Table -->
                     <div class="card p-6">
                         <h3 class="text-xl font-bold mb-4" data-i18n="configuredGateways">Configured Gateways</h3>
-                        <div class="overflow-y-auto max-h-[350px]">
+                        <div class="overflow-y-auto max-h-[350px] custom-scroll">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50 sticky top-0">
                                     <tr>
@@ -590,32 +835,40 @@
                                     </tr>
                                 </thead>
                                 <tbody id="config-gateways-tbody" class="bg-white divide-y divide-gray-200">
-                                    <tr class="hover:bg-indigo-50">
-                                        <td class="px-4 py-3 font-medium">gateway1</td>
-                                        <td class="px-4 py-3 text-gray-600">ที่ทำการไปรษณีย์หลักสี่</td>
-                                        <td class="px-4 py-3 space-x-2">
-                                            <button class="edit-btn text-indigo-600 hover:text-indigo-900" data-id="gateway1">
-                                                <i class="fas fa-edit mr-1"></i><span data-i18n="edit">Edit</span>
-                                            </button>
-                                            <button class="delete-btn text-red-600 hover:text-red-900" data-id="gateway1">
-                                                <i class="fas fa-trash-alt mr-1"></i><span data-i18n="delete">Delete</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:bg-indigo-50">
-                                        <td class="px-4 py-3 font-medium">gateway2</td>
-                                        <td class="px-4 py-3 text-gray-600">ไปรษณีย์ไทย สาขาปทุมธานี</td>
-                                        <td class="px-4 py-3 space-x-2">
-                                            <button class="edit-btn text-indigo-600 hover:text-indigo-900" data-id="gateway2">
-                                                <i class="fas fa-edit mr-1"></i><span data-i18n="edit">Edit</span>
-                                            </button>
-                                            <button class="delete-btn text-red-600 hover:text-red-900" data-id="gateway2">
-                                                <i class="fas fa-trash-alt mr-1"></i><span data-i18n="delete">Delete</span>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                    <!-- Will be populated by JS -->
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="historical-trends" class="tab-content hidden">
+            <section class="mb-12">
+                <div class="mb-8 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2" data-i18n="historicalTrends">Historical Trends</h2>
+                    <p class="text-gray-500 max-w-3xl">View historical data and trends for network performance.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-center mb-4" data-i18n="hourlyMessageRate">Hourly Message Rate</h3>
+                        <div class="chart-container">
+                            <canvas id="hourlyMessageRateChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-center mb-4" data-i18n="gatewayOnlinePercentage">Gateway Online Percentage</h3>
+                        <div class="chart-container">
+                            <canvas id="gatewayOnlinePercentageChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- New Dolly Online Percentage Chart -->
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-center mb-4" data-i18n="dollyOnlinePercentage">Dolly Online Percentage</h3>
+                        <div class="chart-container">
+                            <canvas id="dollyOnlinePercentageChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -624,37 +877,61 @@
     </div>
     
     <!-- Floating Action Button -->
-    <div class="fab" id="scroll-top">
+    <div class="fab" id="scroll-top" title="Scroll to top">
         <i class="fas fa-arrow-up text-xl"></i>
+    </div>
+
+    <!-- Custom Modal for Alerts and Confirms -->
+    <div id="custom-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title" class="text-xl font-bold mb-4 text-gray-800"></h3>
+            <p id="modal-message" class="text-gray-700 mb-6"></p>
+            <div id="modal-buttons" class="modal-buttons">
+                <!-- Buttons will be injected here -->
+            </div>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- DATA STORE ---
-            let liveData = {
-                gateways: {
-                    "gateway1": { id: "gateway1", name: "ที่ทำการไปรษณีย์หลักสี่", status: "ONLINE", lat: 13.8897, lon: 100.5817 },
-                    "gateway2": { id: "gateway2", name: "ไปรษณีย์ไทย สาขาปทุมธานี", status: "ONLINE", lat: 14.0223, lon: 100.5300 }
-                },
-                dollies: {}
-            };
-            
+            // Stores configured gateways, acting as the 'source of truth' for known gateway locations
             let configuredGateways = {
                 "gateway1": { id: "gateway1", name: "ที่ทำการไปรษณีย์หลักสี่", lat: 13.8897, lon: 100.5817 },
-                "gateway2": { id: "gateway2", name: "ไปรษณีย์ไทย สาขาปทุมธานี", lat: 14.0223, lon: 100.5300 }
+                "gateway2": { id: "gateway2", name: "ไปรษณีย์ไทย สาขาปทุมธานี", lat: 14.0223, lon: 100.5300 },
+                "gateway3": { id: "gateway3", name: "ไปรษณีย์อยุธยา", lat: 14.3650605, lon: 100.5378306 }
             };
+
+            // liveData will store current status received via MQTT, including dynamic dollies
+            // Gateways in liveData are initially populated from configuredGateways to ensure all configured are present
+            let liveData = {
+                gateways: {},
+                dollies: {}
+            };
+            // Initialize liveData.gateways with configured ones and an 'UNKNOWN' status
+            Object.values(configuredGateways).forEach(gw => {
+                liveData.gateways[gw.id] = { ...gw, status: 'UNKNOWN', lastSeen: 0 };
+            });
             
-            let messageCount = 0;
-            let prevDeviceCount = 0;
-            let startTime = Date.now();
+            let messageCount = 0; // Total messages received since page load
+            let prevTotalDevices = 0; // For tracking device count changes in KPIs
+            let startTime = Date.now(); // For calculating uptime (simplified)
+            let lastMinuteMessageCount = 0; // To track messages per minute for KPI
+            let messageRateInterval; // Interval for updating message rate KPI
 
             // --- CHART & MAP INSTANCES ---
             let gatewaysChartInstance = null;
             let dolliesChartInstance = null;
             let map = null;
-            const mapMarkers = {};
-            const dollyMapMarkers = {};
-            let socket = null;
+            let mapInitialized = false; // Flag to track if map has been initialized
+            const gatewayMapMarkers = {}; // Stores Leaflet markers for gateways
+            const dollyMapMarkers = {}; // Stores Leaflet markers for dollies
+            let socket = null; // WebSocket connection instance
+
+            // Historical Chart Instances
+            let hourlyMessageRateChartInstance = null;
+            let gatewayOnlinePercentageChartInstance = null;
+            let dollyOnlinePercentageChartInstance = null; // New chart instance
 
             // --- DOM ELEMENTS ---
             const gatewaysTbody = document.getElementById('gateways-tbody');
@@ -671,7 +948,108 @@
             const messagesReceivedEl = document.getElementById('messages-received');
             const uptimeEl = document.getElementById('uptime');
 
+            // Custom Modal Elements
+            const customModal = document.getElementById('custom-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalButtons = document.getElementById('modal-buttons');
+
+            // Notification Bar Elements
+            const notificationBar = document.getElementById('notification-bar');
+            const notificationMessage = document.getElementById('notification-message');
+            const notificationIcon = notificationBar.querySelector('.icon');
+
+            // Search inputs
+            const searchGatewaysInput = document.getElementById('search-gateways');
+            const searchDolliesInput = document.getElementById('search-dollies');
+
+            // --- CUSTOM MODAL FUNCTIONS (Replaces native alert/confirm) ---
+            /**
+             * Displays a custom alert modal.
+             * @param {string} message - The message to display.
+             * @param {string} [title='Alert'] - The title of the modal.
+             */
+            function showAlert(message, title = translations[currentLang].modalAlertTitle || "Alert") {
+                return new Promise(resolve => {
+                    modalTitle.textContent = title;
+                    modalMessage.textContent = message;
+                    modalButtons.innerHTML = `
+                        <button class="btn-alert btn-primary" data-action="ok">${translations[currentLang].modalOk}</button>
+                    `;
+                    
+                    customModal.classList.add('show');
+
+                    modalButtons.querySelector('[data-action="ok"]').onclick = () => {
+                        customModal.classList.remove('show');
+                        resolve(true); // Always resolves true for an alert
+                    };
+                });
+            }
+
+            /**
+             * Displays a custom confirmation modal.
+             * @param {string} message - The confirmation message.
+             * @param {string} [title='Confirm'] - The title of the modal.
+             * @returns {Promise<boolean>} Resolves true if confirmed, false if cancelled.
+             */
+            function showConfirm(message, title = translations[currentLang].modalConfirmTitle || "Confirm") {
+                return new Promise(resolve => {
+                    modalTitle.textContent = title;
+                    modalMessage.textContent = message;
+                    modalButtons.innerHTML = `
+                        <button class="btn-confirm" data-action="confirm">${translations[currentLang].modalConfirm}</button>
+                        <button class="btn-cancel" data-action="cancel">${translations[currentLang].modalCancel}</button>
+                    `;
+                    
+                    customModal.classList.add('show');
+
+                    modalButtons.querySelector('[data-action="confirm"]').onclick = () => {
+                        customModal.classList.remove('show');
+                        resolve(true);
+                    };
+                    modalButtons.querySelector('[data-action="cancel"]').onclick = () => {
+                        customModal.classList.remove('show');
+                        resolve(false);
+                    };
+                });
+            }
+
+            // --- NOTIFICATION SYSTEM ---
+            /**
+             * Displays a temporary notification at the top of the screen.
+             * @param {string} message - The message to display.
+             * @param {string} type - 'success', 'error', 'warning', or 'info'.
+             * @param {number} duration - How long the notification should be visible in ms.
+             */
+            function showNotification(message, type = 'info', duration = 3000) {
+                notificationMessage.textContent = message;
+                notificationBar.className = ``; // Reset classes
+                notificationBar.classList.add('show', type);
+
+                let iconClass = '';
+                switch(type) {
+                    case 'success': iconClass = 'fas fa-check-circle'; break;
+                    case 'error': iconClass = 'fas fa-times-circle'; break;
+                    case 'warning': iconClass = 'fas fa-exclamation-triangle'; break;
+                    case 'info': iconClass = 'fas fa-info-circle'; break;
+                }
+                notificationIcon.className = `icon ${iconClass}`;
+
+                clearTimeout(notificationBar.timer); // Clear any existing timer
+                notificationBar.timer = setTimeout(() => {
+                    notificationBar.classList.remove('show');
+                    // Add a small delay for fade out animation before hiding
+                    setTimeout(() => {
+                        notificationBar.classList.add('hidden'); 
+                    }, 300);
+                }, duration);
+            }
+
             // --- LANGUAGE FUNCTIONS ---
+            /**
+             * Sets the current language and updates all UI elements with data-i18n attributes.
+             * @param {string} lang - 'en' for English, 'th' for Thai.
+             */
             function setLanguage(lang) {
                 currentLang = lang;
                 document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -680,84 +1058,169 @@
                         el.textContent = translations[lang][key];
                     }
                 });
+                 document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    if (translations[lang][key]) {
+                        el.placeholder = translations[lang][key];
+                    }
+                });
                 
+                // Apply/remove Thai font class to body
                 if (lang === 'th') {
                     document.body.classList.add('thai-lang');
                 } else {
                     document.body.classList.remove('thai-lang');
                 }
                 
+                // Update active language button styling
                 document.querySelectorAll('.lang-btn').forEach(btn => {
                     btn.classList.remove('active');
                 });
                 document.getElementById(`lang-${lang}`).classList.add('active');
                 
-                // Update chart labels if charts exist
-                if (gatewaysChartInstance) {
-                    gatewaysChartInstance.destroy();
-                    gatewaysChartInstance = null;
-                }
-                if (dolliesChartInstance) {
-                    dolliesChartInstance.destroy();
-                    dolliesChartInstance = null;
-                }
+                // Re-render components affected by language (charts, tables, MQTT status)
                 renderCharts();
+                renderConfigTable();
+                renderTables(); // Re-render to update 'Last Seen' and empty states
+                updateMqttStatusDisplay();
             }
             
-            // --- REAL-TIME CLOCK FOR THAILAND (GMT+7) ---
+            // --- REAL-TIME CLOCK & STATS ---
+            /**
+             * Updates the current time displayed in the header.
+             */
             function updateClock() {
                 const now = new Date();
-                const thaiTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+                const thaiTime = new Date(now.getTime() + (7 * 60 * 60 * 1000)); // GMT+7
                 
                 const hours = thaiTime.getUTCHours().toString().padStart(2, '0');
                 const minutes = thaiTime.getUTCMinutes().toString().padStart(2, '0');
                 const seconds = thaiTime.getUTCSeconds().toString().padStart(2, '0');
                 
                 currentTimeEl.textContent = `${hours}:${minutes}:${seconds} +07:00`;
-                
-                // Update uptime
-                const elapsed = (Date.now() - startTime) / 1000; // in seconds
-                const hoursRunning = Math.floor(elapsed / 3600);
-                const minutesRunning = Math.floor((elapsed % 3600) / 60);
-                uptimeEl.textContent = "100"; // Simplified for demo
             }
-            
-            // --- MQTT CONNECTION VIA WEBSOCKET PROXY ---
-            function connectToMQTT() {
-                const WS_PROXY_URL = 'ws://localhost:9001'; 
-                
-                // Update status
-                mqttStatusText.textContent = translations[currentLang].connecting;
-                mqttStatusText.className = 'font-bold text-yellow-500';
-                mqttStatusIndicator.className = 'connection-indicator connecting';
-                
-                try {
-                    socket = new WebSocket(WS_PROXY_URL);
-                } catch (e) {
-                    console.error("WebSocket connection initiation error:", e);
+
+            /**
+             * Updates the display for MQTT connection status.
+             */
+            function updateMqttStatusDisplay() {
+                if (!socket) {
                     mqttStatusText.textContent = translations[currentLang].disconnected;
                     mqttStatusText.className = 'font-bold text-red-600';
                     mqttStatusIndicator.className = 'connection-indicator disconnected';
                     return;
                 }
+                switch (socket.readyState) {
+                    case WebSocket.CONNECTING:
+                        mqttStatusText.textContent = translations[currentLang].connecting;
+                        mqttStatusText.className = 'font-bold text-yellow-500';
+                        mqttStatusIndicator.className = 'connection-indicator connecting';
+                        break;
+                    case WebSocket.OPEN:
+                        mqttStatusText.textContent = translations[currentLang].connected;
+                        mqttStatusText.className = 'font-bold text-green-600';
+                        mqttStatusIndicator.className = 'connection-indicator connected';
+                        break;
+                    case WebSocket.CLOSING:
+                    case WebSocket.CLOSED:
+                        mqttStatusText.textContent = translations[currentLang].disconnected;
+                        mqttStatusText.className = 'font-bold text-red-600';
+                        mqttStatusIndicator.className = 'connection-indicator disconnected';
+                        break;
+                }
+            }
+            
+            /**
+             * Updates key performance indicators (KPIs) like device counts and message rate.
+             */
+            function updateStats() {
+                // Device count and change
+                const currentTotalDevices = Object.keys(liveData.gateways).length + Object.keys(liveData.dollies).length;
+                const deviceChange = currentTotalDevices - prevTotalDevices;
+                
+                totalDevicesEl.textContent = currentTotalDevices;
+                
+                // Update device change arrow and text
+                if (deviceChange > 0) {
+                    deviceChangeEl.className = "text-sm font-normal text-green-600";
+                    deviceChangeEl.innerHTML = `<i class="fas fa-arrow-up mr-1 animate-pulse"></i>${deviceChange}`;
+                } else if (deviceChange < 0) {
+                    deviceChangeEl.className = "text-sm font-normal text-red-600";
+                    deviceChangeEl.innerHTML = `<i class="fas fa-arrow-down mr-1"></i>${Math.abs(deviceChange)}`;
+                } else {
+                    deviceChangeEl.className = "text-sm font-normal text-gray-600";
+                    deviceChangeEl.innerHTML = `<i class="fas fa-minus mr-1"></i>0`;
+                }
+                prevTotalDevices = currentTotalDevices;
+
+                // Messages per minute (data flow)
+                // Animate text for message rate to indicate update
+                messagesReceivedEl.style.transform = 'scale(1.1)';
+                messagesReceivedEl.textContent = lastMinuteMessageCount;
+                setTimeout(() => {
+                    messagesReceivedEl.style.transform = 'scale(1)';
+                }, 100); // Quick animation
+                
+                lastMinuteMessageCount = 0; // Reset for next minute
+                
+                // Uptime (simplified - always 100% for this demo)
+                uptimeEl.textContent = "100";
+            }
+
+            // --- MQTT CONNECTION VIA WEBSOCKET PROXY ---
+            /**
+             * Establishes and manages the WebSocket connection to the MQTT proxy.
+             */
+            function connectToMQTT() {
+                const WS_PROXY_URL = 'ws://localhost:9001'; 
+                
+                updateMqttStatusDisplay(); // Set to 'Connecting...'
+                
+                try {
+                    socket = new WebSocket(WS_PROXY_URL);
+                } catch (e) {
+                    console.error("WebSocket connection initiation error:", e);
+                    updateMqttStatusDisplay(); // Set to 'Disconnected'
+                    return;
+                }
 
                 socket.onopen = () => {
                     console.log('WebSocket connection to proxy established!');
-                    mqttStatusText.textContent = translations[currentLang].connected;
-                    mqttStatusText.className = 'font-bold text-green-600';
-                    mqttStatusIndicator.className = 'connection-indicator connected';
+                    updateMqttStatusDisplay(); // Set to 'Connected'
+                    showNotification(translations[currentLang].mqttConnected, 'success');
                 };
 
                 socket.onmessage = (event) => {
+                    messageCount++; // Increment total message count
+                    lastMinuteMessageCount++; // Increment message count for messages/min KPI
                     try {
-                        messageCount++;
                         const data = JSON.parse(event.data);
                         
-                        // Handle error message from proxy
+                        // Handle status/error messages from proxy
+                        if (data.status) {
+                            if (data.status === 'connected') {
+                                updateMqttStatusDisplay();
+                                showNotification(translations[currentLang].mqttConnected, 'success');
+                            } else if (data.status === 'disconnected') {
+                                mqttStatusText.innerHTML = `${translations[currentLang].disconnected} ${data.error ? `(${data.error})` : ''}`;
+                                mqttStatusText.className = 'font-bold text-red-600';
+                                mqttStatusIndicator.className = 'connection-indicator disconnected';
+                                showNotification(translations[currentLang].mqttDisconnected + (data.error ? `: ${data.error}` : ''), 'error', 5000);
+                            }
+                            return; // This was a status message, not an MQTT message
+                        }
+                        
                         if (data.error) {
                             console.error('Error from proxy:', data.error);
-                            mqttStatusText.innerHTML = `Proxy Error: ${data.error}`;
-                            mqttStatusText.className = 'font-bold text-red-600';
+                            // Only update status text if it's a critical connection error, not just a data error
+                            if (data.error.includes("MQTT Broker Connection Error") || data.error.includes("MQTT Client Offline")) {
+                                mqttStatusText.innerHTML = `Proxy Error: ${data.error}`;
+                                mqttStatusText.className = 'font-bold text-red-600';
+                                showNotification(translations[currentLang].mqttError + `: ${data.error}`, 'error', 5000);
+                            } else {
+                                // For other errors, just log and possibly show a subtle warning
+                                console.warn(`Non-critical proxy error: ${data.error}`);
+                            }
                             return;
                         }
 
@@ -768,82 +1231,102 @@
                         try {
                             actualPayload = JSON.parse(payload);
                         } catch (parseError) {
-                            console.error(`Could not parse MQTT payload:`, payload, parseError);
-                            actualPayload = { _raw_payload_string: payload };
+                            console.warn(`Could not parse MQTT payload for topic ${topic}:`, payload, parseError);
+                            actualPayload = { _raw_payload_string: payload }; // Store raw if parse fails
                         }
                         
-                        console.log(`Received MQTT message on topic ${topic}:`, actualPayload);
+                        // console.log(`Received MQTT message on topic ${topic}:`, actualPayload); // Uncomment for verbose logging
                         
                         let updatedElementId = null;
-                        let deviceId = null;
 
                         // Handle different MQTT topics
                         if (topic === 'heltec/lora/data' && typeof actualPayload === 'object') {
                             const { gateway_id, rssi, node_id } = actualPayload;
+                            const timestamp = Date.now(); // Record current time for lastSeen
+
+                            // Update or add gateway to liveData
+                            if (gateway_id) {
+                                // If a gateway is not in configured list, add it as a dynamic entry
+                                if (!liveData.gateways[gateway_id]) {
+                                    liveData.gateways[gateway_id] = { 
+                                        id: gateway_id, 
+                                        name: `${translations[currentLang].unknown} Gateway`, 
+                                        status: 'UNKNOWN', 
+                                        lastSeen: 0, 
+                                        lat: null, 
+                                        lon: null // No GPS for dynamic gateways by default
+                                    };
+                                }
+                                liveData.gateways[gateway_id].status = 'ONLINE';
+                                liveData.gateways[gateway_id].lastSeen = timestamp;
+                                updatedElementId = `gw-row-${gateway_id}`;
+                            }
+
+                            // Update or add dolly to liveData
                             if (node_id) {
-                                deviceId = node_id;
+                                const currentDolly = liveData.dollies[node_id] || { id: node_id, status: 'OFFLINE' };
                                 liveData.dollies[node_id] = {
-                                    ...liveData.dollies[node_id],
-                                    id: node_id,
-                                    gatewayId: gateway_id,
+                                    ...currentDolly, // Retain existing properties (like gatewayId if not new)
+                                    gatewayId: gateway_id, // Link to the gateway it's currently reporting through
                                     rssi: rssi,
                                     distance: calculateDistance(rssi),
                                     status: 'ONLINE',
-                                    lastSeen: Date.now()
+                                    lastSeen: timestamp
                                 };
                                 updatedElementId = `dolly-row-${node_id}`;
-                            }
-                            if (gateway_id) {
-                                deviceId = gateway_id;
-                                liveData.gateways[gateway_id] = {
-                                    ...liveData.gateways[gateway_id],
-                                    id: gateway_id,
-                                    status: 'ONLINE',
-                                    lastSeen: Date.now()
-                                };
-                                updatedElementId = `gw-row-${gateway_id}`;
                             }
                         } 
                         else if (topic.startsWith('heltec/gateway/') && topic.endsWith('/status')) {
-                            const { gateway_id, status } = actualPayload;
-                            if (gateway_id) {
-                                deviceId = gateway_id;
-                                liveData.gateways[gateway_id] = {
-                                    ...liveData.gateways[gateway_id],
-                                    id: gateway_id,
-                                    status: status,
-                                    lastSeen: Date.now()
-                                };
-                                updatedElementId = `gw-row-${gateway_id}`;
+                            const gateway_id_from_topic = topic.split('/')[2];
+                            const status = actualPayload.status || 'UNKNOWN'; // Use payload status or default
+                            const timestamp = Date.now();
+                            
+                            if (gateway_id_from_topic) {
+                                // If gateway is not in configured list, add a placeholder
+                                if (!liveData.gateways[gateway_id_from_topic]) {
+                                    liveData.gateways[gateway_id_from_topic] = { 
+                                        id: gateway_id_from_topic, 
+                                        name: `${translations[currentLang].unknown} Gateway`, 
+                                        status: 'UNKNOWN', 
+                                        lastSeen: 0, 
+                                        lat: null, 
+                                        lon: null 
+                                    };
+                                }
+                                liveData.gateways[gateway_id_from_topic].status = status.toUpperCase();
+                                liveData.gateways[gateway_id_from_topic].lastSeen = timestamp;
+                                updatedElementId = `gw-row-${gateway_id_from_topic}`;
                             }
                         } 
                         else if (topic.startsWith('heltec/nodes/') && topic.endsWith('/status')) {
-                            const { node_id, status, gateway_id } = actualPayload;
-                            if (node_id) {
-                                deviceId = node_id;
-                                liveData.dollies[node_id] = {
-                                    ...liveData.dollies[node_id],
-                                    id: node_id,
-                                    status: status,
-                                    gatewayId: gateway_id || liveData.dollies[node_id]?.gatewayId,
-                                    lastSeen: Date.now()
+                            const node_id_from_topic = topic.split('/')[2];
+                            const status = actualPayload.status || 'UNKNOWN';
+                            const gateway_id = actualPayload.gateway_id || null; // Can be in status message too
+                            const timestamp = Date.now();
+                            
+                            if (node_id_from_topic) {
+                                const currentDolly = liveData.dollies[node_id_from_topic] || { id: node_id_from_topic, status: 'OFFLINE' };
+                                liveData.dollies[node_id_from_topic] = {
+                                    ...currentDolly,
+                                    status: status.toUpperCase(),
+                                    gatewayId: gateway_id || currentDolly.gatewayId, // Update gateway if provided
+                                    lastSeen: timestamp
                                 };
-                                updatedElementId = `dolly-row-${node_id}`;
+                                updatedElementId = `dolly-row-${node_id_from_topic}`;
                             }
                         }
 
-                        // Update UI if we have a valid message
-                        if (deviceId) {
-                            renderAll();
-                            
-                            // Highlight updated row
-                            if (updatedElementId) {
-                                const rowElement = document.getElementById(updatedElementId);
-                                if (rowElement) {
-                                    rowElement.classList.remove('highlight');
-                                    void rowElement.offsetWidth;
-                                    rowElement.classList.add('highlight');
-                                }
+                        // Update UI if we have valid message data processed
+                        renderAll();
+                        
+                        // Highlight updated row if available
+                        if (updatedElementId) {
+                            const rowElement = document.getElementById(updatedElementId);
+                            if (rowElement) {
+                                rowElement.classList.remove('highlight');
+                                // Trigger reflow to restart animation
+                                void rowElement.offsetWidth; 
+                                rowElement.classList.add('highlight');
                             }
                         }
 
@@ -854,9 +1337,12 @@
 
                 socket.onclose = (event) => {
                     console.log('WebSocket connection closed:', event);
-                    mqttStatusText.textContent = translations[currentLang].disconnected;
-                    mqttStatusText.className = 'font-bold text-red-600';
-                    mqttStatusIndicator.className = 'connection-indicator disconnected';
+                    updateMqttStatusDisplay(); // Set to 'Disconnected'
+                    // Mark all live devices as offline if proxy disconnects
+                    Object.values(liveData.gateways).forEach(gw => gw.status = 'OFFLINE');
+                    Object.values(liveData.dollies).forEach(dolly => dolly.status = 'OFFLINE');
+                    renderAll();
+                    showNotification(translations[currentLang].mqttDisconnected, 'error');
                     
                     // Attempt to reconnect after a delay
                     setTimeout(connectToMQTT, 3000);
@@ -864,58 +1350,124 @@
 
                 socket.onerror = (error) => {
                     console.error('WebSocket error:', error);
-                    mqttStatusText.textContent = translations[currentLang].disconnected;
-                    mqttStatusText.className = 'font-bold text-red-600';
-                    mqttStatusIndicator.className = 'connection-indicator disconnected';
-                    socket.close();
+                    updateMqttStatusDisplay(); // Set to 'Disconnected'
+                    socket.close(); // Ensure proper closure to trigger onclose and reconnect
+                    showNotification(translations[currentLang].mqttError + `: ${error.message}`, 'error', 5000);
                 };
             }
             
             // --- HELPER FUNCTIONS ---
+            /**
+             * Calculates an estimated distance from RSSI.
+             * This is a simple model and may require calibration for real-world accuracy.
+             * @param {number} rssi - The Received Signal Strength Indicator in dBm.
+             * @returns {string} Estimated distance in meters or 'N/A'.
+             */
             function calculateDistance(rssi) {
-                if (!rssi || rssi >= 0) return 0;
-                const txPower = -59; // dBm at 1 meter
-                const n = 2.5; // Environmental factor
-                return Math.pow(10, (txPower - rssi) / (10 * n)).toFixed(2);
-            }
-            
-            function updateStats() {
-                const totalDevices = Object.keys(liveData.gateways).length + Object.keys(liveData.dollies).length;
-                const deviceChange = totalDevices - prevDeviceCount;
+                if (rssi === undefined || rssi === null || isNaN(rssi) || rssi >= 0) return translations[currentLang].unknown;
+                // Typical values for LoRa:
+                const txPower = -59; // Power at 1 meter in dBm (calibration value)
+                const n = 2.5; // Path loss exponent (2.0 for free space, 2.5-3.5 for indoor/cluttered environments)
                 
-                totalDevicesEl.textContent = totalDevices;
-                deviceChangeEl.textContent = Math.abs(deviceChange);
-                
-                if (deviceChange > 0) {
-                    deviceChangeEl.className = "text-sm font-normal text-green-600";
-                    deviceChangeEl.innerHTML = `<i class="fas fa-arrow-up mr-1"></i>${deviceChange}`;
-                } else if (deviceChange < 0) {
-                    deviceChangeEl.className = "text-sm font-normal text-red-600";
-                    deviceChangeEl.innerHTML = `<i class="fas fa-arrow-down mr-1"></i>${Math.abs(deviceChange)}`;
-                } else {
-                    deviceChangeEl.className = "text-sm font-normal text-gray-600";
-                    deviceChangeEl.innerHTML = `<i class="fas fa-minus mr-1"></i>0`;
-                }
-                
-                prevDeviceCount = totalDevices;
-                messagesReceivedEl.textContent = Math.floor(messageCount / ((Date.now() - startTime) / 60000));
-                
-                // Update every minute
-                setTimeout(updateStats, 60000);
+                // Distance formula: d = 10^((TxPower - RSSI) / (10 * n))
+                const distance = Math.pow(10, (txPower - rssi) / (10 * n));
+                return distance.toFixed(2);
             }
 
+            /**
+             * Formats a timestamp into a human-readable relative time string, falling back to absolute time.
+             * @param {number} timestamp - Unix timestamp in milliseconds.
+             * @returns {string} Formatted time string (e.g., "5 mins ago", "Yesterday", "2024-06-25 10:30 AM").
+             */
+            function formatTimestamp(timestamp) {
+                if (!timestamp || timestamp === 0) return translations[currentLang].unknown;
+
+                const now = Date.now();
+                const diffSeconds = Math.floor((now - timestamp) / 1000);
+                const diffMinutes = Math.floor(diffSeconds / 60);
+                const diffHours = Math.floor(diffMinutes / 60);
+                const diffDays = Math.floor(diffHours / 24);
+
+                const date = new Date(timestamp);
+                const locale = currentLang === 'th' ? 'th-TH' : 'en-US';
+
+                if (diffSeconds < 60) {
+                    return translations[currentLang].justNow;
+                } else if (diffMinutes < 60) {
+                    return `${diffMinutes} ${translations[currentLang].minutesAgo}`;
+                } else if (diffHours < 24) {
+                    return `${diffHours} ${translations[currentLang].hoursAgo}`;
+                } else if (diffDays === 1) {
+                    return translations[currentLang].yesterday;
+                } else if (diffDays < 7) {
+                    return `${diffDays} ${translations[currentLang].daysAgo}`;
+                } else {
+                    // Fallback to absolute date and time for older entries
+                    return date.toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' }) + ' ' +
+                           date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+                }
+            }
+
+            /**
+             * Initializes the Leaflet map instance.
+             * This function is now called only once, the first time the map tab is activated.
+             */
+            function initializeMap() {
+                if (mapInitialized) return; // Ensure it only runs once
+
+                const defaultCenter = [13.736717, 100.523186]; // Bangkok, Thailand coordinates
+                const defaultZoom = 12;
+
+                map = L.map('map').setView(defaultCenter, defaultZoom);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+
+                // Attach event listener for reset map button
+                resetMapBtn.addEventListener('click', () => {
+                    const locationsForFitBounds = []; // Collect all valid locations for map fitting
+                    Object.values(configuredGateways).forEach(gw => {
+                        if (gw.lat !== null && gw.lon !== null && !isNaN(gw.lat) && !isNaN(gw.lon)) {
+                            locationsForFitBounds.push([gw.lat, gw.lon]);
+                        }
+                    });
+                    Object.values(liveData.dollies).forEach(dolly => {
+                        const gateway = configuredGateways[dolly.gatewayId];
+                        if (gateway && gateway.lat !== null && gateway.lon !== null && !isNaN(gateway.lat) && !isNaN(gateway.lon)) {
+                            locationsForFitBounds.push([gateway.lat, gateway.lon]);
+                        }
+                    });
+
+                    if (locationsForFitBounds.length > 0) {
+                        map.fitBounds(locationsForFitBounds, { padding: [40, 40] });
+                    } else {
+                        map.setView(defaultCenter, defaultZoom);
+                    }
+                });
+                
+                mapInitialized = true;
+                renderMap(); // Initial render of markers after map is set up
+            }
+            
             // --- RENDER FUNCTIONS ---
+            /**
+             * Renders all dashboard components.
+             */
             function renderAll() {
                 renderKPIs();
                 renderCharts();
                 renderTables();
                 renderConfigTable();
-                renderMap();
+                // renderMap() is now called conditionally by handleTabSwitch or initializeMap
+                renderHistoricalCharts(); 
             }
 
+            /**
+             * Updates the KPI cards with current data.
+             */
             function renderKPIs() {
-                const totalGateways = Object.keys(liveData.gateways).length;
-                const onlineGateways = Object.values(liveData.gateways).filter(g => g.status === 'ONLINE').length;
+                const totalGateways = Object.keys(configuredGateways).length;
+                const onlineGateways = Object.values(liveData.gateways).filter(gw => gw.status === 'ONLINE').length;
                 const totalDollies = Object.keys(liveData.dollies).length;
                 const onlineDollies = Object.values(liveData.dollies).filter(d => d.status === 'ONLINE').length;
 
@@ -925,24 +1477,58 @@
                 document.getElementById('online-dollies').textContent = onlineDollies;
             }
 
+            /**
+             * Renders or updates the Chart.js instances for gateway and dolly status.
+             */
             function renderCharts() {
+                // Data for Gateways Chart: based on liveData
+                let onlineGatewaysCount = 0;
+                let offlineGatewaysCount = 0;
+                let unknownGatewaysCount = 0;
+
+                // First, categorize all *configured* gateways based on their live status
+                Object.values(configuredGateways).forEach(configGw => {
+                    const liveGw = liveData.gateways[configGw.id];
+                    if (liveGw && liveGw.status === 'ONLINE') {
+                        onlineGatewaysCount++;
+                    } else if (liveGw && liveGw.status === 'OFFLINE') {
+                        offlineGatewaysCount++;
+                    } else { // If not in liveData or status is UNKNOWN (e.g., initially or after proxy disconnect)
+                        unknownGatewaysCount++;
+                    }
+                });
+                
+                // Then, account for any "dynamic" gateways (those reporting via MQTT but not explicitly configured)
+                // These will be considered 'UNKNOWN' status if they aren't explicitly configured.
+                Object.values(liveData.gateways).forEach(liveGw => {
+                    if (!configuredGateways[liveGw.id] && liveGw.status === 'ONLINE') {
+                        // If an unconfigured gateway is online, it's still 'active' but we don't have its fixed location.
+                        // For the chart, we might consider them 'online but unknown' if we had a separate category.
+                        // For simplicity in a binary chart, they're part of the 'online' count.
+                        // For now, these are implicitly covered in `onlineGatewaysCount` if their status from MQTT is 'ONLINE'.
+                    }
+                });
+
                 const gatewayData = {
-                    online: Object.values(liveData.gateways).filter(g => g.status === 'ONLINE').length,
-                    offline: Object.values(liveData.gateways).filter(g => g.status !== 'ONLINE').length,
+                    online: onlineGatewaysCount,
+                    // Group offline and unknown configured gateways for the chart
+                    offline: offlineGatewaysCount + unknownGatewaysCount 
                 };
+
+                // Data for Dollies Chart: based on liveData
                 const dollyData = {
                     online: Object.values(liveData.dollies).filter(d => d.status === 'ONLINE').length,
                     offline: Object.values(liveData.dollies).filter(d => d.status !== 'ONLINE').length,
                 };
 
-                const chartConfig = (data, label) => ({
+                const chartConfig = (data, chartLabel) => ({
                     type: 'doughnut',
                     data: {
                         labels: [translations[currentLang].online, translations[currentLang].offline],
                         datasets: [{
-                            label: label,
+                            label: chartLabel,
                             data: [data.online, data.offline],
-                            backgroundColor: ['#10b981', '#ef4444'],
+                            backgroundColor: ['#10b981', '#ef4444'], // Success green, Danger red
                             borderColor: '#ffffff',
                             borderWidth: 2,
                         }]
@@ -963,7 +1549,14 @@
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        return `${context.label}: ${context.raw}`;
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed;
+                                        }
+                                        return label;
                                     }
                                 }
                             }
@@ -972,236 +1565,576 @@
                     }
                 });
 
+                // Destroy existing charts before re-creating to prevent memory leaks and ensure updates
                 if (gatewaysChartInstance) gatewaysChartInstance.destroy();
-                gatewaysChartInstance = new Chart(document.getElementById('gatewaysChart').getContext('2d'), chartConfig(gatewayData, 'Gateways'));
+                gatewaysChartInstance = new Chart(document.getElementById('gatewaysChart').getContext('2d'), chartConfig(gatewayData, translations[currentLang].gateways));
 
                 if (dolliesChartInstance) dolliesChartInstance.destroy();
-                dolliesChartInstance = new Chart(document.getElementById('dolliesChart').getContext('2d'), chartConfig(dollyData, 'Dollies'));
+                dolliesChartInstance = new Chart(document.getElementById('dolliesChart').getContext('2d'), chartConfig(dollyData, translations[currentLang].dollies));
             }
 
+            /**
+             * Renders or updates the live data tables for gateways and dollies.
+             * Also applies search filtering.
+             */
             function renderTables() {
                 // Gateways Table
-                gatewaysTbody.innerHTML = '';
-                Object.values(liveData.gateways).forEach(gw => {
-                    const statusClass = gw.status === 'ONLINE' ? 'text-green-600' : 'text-red-600';
-                    const statusIcon = gw.status === 'ONLINE' ? '<span class="pulse-online mr-2"></span>' : '<i class="fas fa-circle text-red-500 mr-2"></i>';
-                    const row = `
-                        <tr id="gw-row-${gw.id}" class="hover:bg-indigo-50">
-                            <td class="px-4 py-3 font-medium">${gw.id}</td>
-                            <td class="px-4 py-3 font-bold ${statusClass}">${statusIcon}${gw.status}</td>
-                        </tr>
-                    `;
-                    gatewaysTbody.insertAdjacentHTML('beforeend', row);
-                });
+                gatewaysTbody.innerHTML = ''; // Clear current table content
+                const liveGatewaysArray = Object.values(configuredGateways); // Use configured gateways to show all expected devices
+                const gatewaySearchTerm = searchGatewaysInput.value.toLowerCase();
+
+                const filteredGateways = liveGatewaysArray.filter(gw => 
+                    gw.id.toLowerCase().includes(gatewaySearchTerm) ||
+                    gw.name.toLowerCase().includes(gatewaySearchTerm)
+                );
+
+                if (filteredGateways.length === 0) {
+                    gatewaysTbody.innerHTML = `<tr><td colspan="3" class="px-4 py-3 text-center text-gray-500">${translations[currentLang].noGatewaysLive}</td></tr>`;
+                } else {
+                    filteredGateways.forEach(configGw => {
+                        const liveGw = liveData.gateways[configGw.id];
+                        // Determine status based on liveData, default to 'OFFLINE' if no recent live data
+                        const status = liveGw ? liveGw.status : 'OFFLINE';
+                        const statusText = translations[currentLang][status.toLowerCase()] || translations[currentLang].unknown; // Fallback to 'unknown' if status is unrecognized
+
+                        const statusClass = status === 'ONLINE' ? 'text-green-600' : (status === 'OFFLINE' ? 'text-red-600' : 'text-gray-600');
+                        const statusIcon = status === 'ONLINE'
+                            ? '<span class="pulse-online mr-2"></span>'
+                            : `<i class="fas fa-circle ${status === 'OFFLINE' ? 'text-red-500' : 'text-gray-500'} mr-2"></i>`;
+                        
+                        const lastSeenTime = liveGw && liveGw.lastSeen ? formatTimestamp(liveGw.lastSeen) : translations[currentLang].unknown;
+
+                        const row = `
+                            <tr id="gw-row-${configGw.id}" class="hover:bg-indigo-50 transition duration-150 ease-in-out">
+                                <td class="px-4 py-3 font-medium">${configGw.id}</td>
+                                <td class="px-4 py-3 font-bold ${statusClass}">${statusIcon}${statusText}</td>
+                                <td class="px-4 py-3 text-gray-600">${lastSeenTime}</td>
+                            </tr>
+                        `;
+                        gatewaysTbody.insertAdjacentHTML('beforeend', row);
+                    });
+                }
+
 
                 // Dollies Table
-                dolliesTbody.innerHTML = '';
-                Object.values(liveData.dollies).forEach(dolly => {
-                    const statusClass = dolly.status === 'ONLINE' ? 'text-green-600' : 'text-red-600';
-                    const statusIcon = dolly.status === 'ONLINE' ? '<span class="pulse-online mr-2"></span>' : '<i class="fas fa-circle text-red-500 mr-2"></i>';
-                    const row = `
-                        <tr id="dolly-row-${dolly.id}" class="hover:bg-indigo-50">
-                            <td class="px-4 py-3 font-medium">${dolly.id}</td>
-                            <td class="px-4 py-3 font-bold ${statusClass}">${statusIcon}${dolly.status}</td>
-                            <td class="px-4 py-3 text-gray-600">${dolly.gatewayId || 'N/A'}</td>
-                            <td class="px-4 py-3 text-gray-600">${dolly.rssi !== undefined ? dolly.rssi : 'N/A'}</td>
-                        </tr>
-                    `;
-                    dolliesTbody.insertAdjacentHTML('beforeend', row);
-                });
+                dolliesTbody.innerHTML = ''; // Clear current table content
+                const liveDolliesArray = Object.values(liveData.dollies);
+                const dollySearchTerm = searchDolliesInput.value.toLowerCase();
+
+                const filteredDollies = liveDolliesArray.filter(dolly => 
+                    dolly.id.toLowerCase().includes(dollySearchTerm) ||
+                    (dolly.gatewayId && dolly.gatewayId.toLowerCase().includes(dollySearchTerm))
+                );
+
+                if (filteredDollies.length === 0) {
+                    dolliesTbody.innerHTML = `<tr><td colspan="6" class="px-4 py-3 text-center text-gray-500">${translations[currentLang].noDolliesLive}</td></tr>`;
+                } else {
+                    filteredDollies.forEach(dolly => {
+                        const statusText = translations[currentLang][dolly.status.toLowerCase()] || translations[currentLang].unknown;
+                        const statusClass = dolly.status === 'ONLINE' ? 'text-green-600' : 'text-red-600';
+                        const statusIcon = dolly.status === 'ONLINE' ? '<span class="pulse-online mr-2"></span>' : '<i class="fas fa-circle text-red-500 mr-2"></i>';
+                        
+                        const lastSeenTime = dolly.lastSeen ? formatTimestamp(dolly.lastSeen) : translations[currentLang].unknown;
+
+                        const row = `
+                            <tr id="dolly-row-${dolly.id}" class="hover:bg-indigo-50 transition duration-150 ease-in-out">
+                                <td class="px-4 py-3 font-medium">${dolly.id}</td>
+                                <td class="px-4 py-3 font-bold ${statusClass}">${statusIcon}${statusText}</td>
+                                <td class="px-4 py-3 text-gray-600">${dolly.gatewayId || translations[currentLang].unknown}</td>
+                                <td class="px-4 py-3 text-gray-600">${dolly.rssi !== undefined ? dolly.rssi : translations[currentLang].unknown}</td>
+                                <td class="px-4 py-3 text-gray-600">${dolly.distance !== undefined ? dolly.distance : translations[currentLang].unknown}</td>
+                                <td class="px-4 py-3 text-gray-600">${lastSeenTime}</td>
+                            </tr>
+                        `;
+                        dolliesTbody.insertAdjacentHTML('beforeend', row);
+                    });
+                }
             }
 
+            /**
+             * Renders or updates the configuration table for gateways.
+             */
             function renderConfigTable() {
-                configGatewaysTbody.innerHTML = '';
-                Object.values(configuredGateways).forEach(gw => {
-                    const row = `
-                        <tr class="hover:bg-indigo-50">
-                            <td class="px-4 py-3 font-medium">${gw.id}</td>
-                            <td class="px-4 py-3 text-gray-600">${gw.name}</td>
-                            <td class="px-4 py-3 space-x-2">
-                                <button class="edit-btn text-indigo-600 hover:text-indigo-900" data-id="${gw.id}">
-                                    <i class="fas fa-edit mr-1"></i><span data-i18n="edit">Edit</span>
-                                </button>
-                                <button class="delete-btn text-red-600 hover:text-red-900" data-id="${gw.id}">
-                                    <i class="fas fa-trash-alt mr-1"></i><span data-i18n="delete">Delete</span>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                    configGatewaysTbody.insertAdjacentHTML('beforeend', row);
-                });
+                configGatewaysTbody.innerHTML = ''; // Clear current table content
+                const configuredGatewaysArray = Object.values(configuredGateways);
 
-                // Re-attach event listeners
+                if (configuredGatewaysArray.length === 0) {
+                    configGatewaysTbody.innerHTML = `<tr><td colspan="3" class="px-4 py-3 text-center text-gray-500">${translations[currentLang].noGatewaysConfigured}</td></tr>`;
+                } else {
+                    configuredGatewaysArray.forEach(gw => {
+                        const row = `
+                            <tr class="hover:bg-indigo-50 transition duration-150 ease-in-out">
+                                <td class="px-4 py-3 font-medium">${gw.id}</td>
+                                <td class="px-4 py-3 text-gray-600">${gw.name}</td>
+                                <td class="px-4 py-3 space-x-2">
+                                    <button class="edit-btn text-indigo-600 hover:text-indigo-900 transition duration-150" data-id="${gw.id}">
+                                        <i class="fas fa-edit mr-1"></i><span data-i18n="edit">${translations[currentLang].edit}</span>
+                                    </button>
+                                    <button class="delete-btn text-red-600 hover:text-red-900 transition duration-150" data-id="${gw.id}">
+                                        <i class="fas fa-trash-alt mr-1"></i><span data-i18n="delete">${translations[currentLang].delete}</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        configGatewaysTbody.insertAdjacentHTML('beforeend', row);
+                    });
+                }
+
+                // Re-attach event listeners after re-rendering to ensure they work on new elements
                 document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEdit));
                 document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDelete));
-                
-                // Update translations
-                setLanguage(currentLang);
             }
             
+            /**
+             * Creates a custom Leaflet DivIcon for dollies.
+             * @param {string} status - The status of the dolly ('ONLINE', 'OFFLINE', 'UNKNOWN').
+             * @param {string} id - The ID of the dolly (last two digits displayed).
+             * @returns {L.DivIcon} A Leaflet DivIcon instance.
+             */
             function createDollyIcon(status, id = '') {
                 let statusClass = 'unknown';
                 if (status === 'ONLINE') statusClass = 'online';
                 else if (status === 'OFFLINE') statusClass = 'offline';
                 
+                // Use the last two digits for ID on marker for better uniqueness if IDs are long
+                const displayId = id.length > 2 ? id.substring(id.length - 2) : id;
+
                 return L.divIcon({
                     className: 'custom-dolly-icon',
-                    html: `<div class="dolly-icon ${statusClass}">${id.substring(id.length - 1)}</div>`,
-                    iconSize: [24, 24],
-                    iconAnchor: [12, 12]
+                    html: `<div class="dolly-icon ${statusClass}">${displayId}</div>`,
+                    iconSize: [28, 28], // Slightly larger
+                    iconAnchor: [14, 14] // Center the icon
                 });
             }
-
+            
+            /**
+             * Renders or updates the Leaflet map with gateway and dolly markers.
+             */
             function renderMap() {
-                if (!map) {
-                    map = L.map('map').setView([13.736717, 100.523186], 11);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap contributors'
-                    }).addTo(map);
-                    
-                    // Add reset button functionality
-                    resetMapBtn.addEventListener('click', () => {
-                        map.setView([13.736717, 100.523186], 11);
-                    });
+                // Only render map if it has been initialized
+                if (!mapInitialized) return;
+
+                // Clear existing markers first
+                for (const key in gatewayMapMarkers) {
+                    if (gatewayMapMarkers[key]) map.removeLayer(gatewayMapMarkers[key]);
+                    delete gatewayMapMarkers[key];
+                }
+                for (const key in dollyMapMarkers) {
+                    if (dollyMapMarkers[key]) map.removeLayer(dollyMapMarkers[key]);
+                    delete dollyMapMarkers[key];
+                }
+
+                const locationsForFitBounds = []; // Collect all valid locations for map fitting
+                // Add configured gateway locations to fit bounds
+                Object.values(configuredGateways).forEach(gw => {
+                    if (gw.lat !== null && gw.lon !== null && !isNaN(gw.lat) && !isNaN(gw.lon)) {
+                        locationsForFitBounds.push([gw.lat, gw.lon]);
+                    }
+                });
+                // Add dolly locations (based on their connected gateway's configured location)
+                Object.values(liveData.dollies).forEach(dolly => {
+                    const gateway = configuredGateways[dolly.gatewayId]; // Get location from configured gateway
+                    if (gateway && gateway.lat !== null && gateway.lon !== null && !isNaN(gateway.lat) && !isNaN(gateway.lon)) {
+                        locationsForFitBounds.push([gateway.lat, gateway.lon]);
+                    }
+                });
+
+                const defaultCenter = [13.736717, 100.523186]; // Bangkok, Thailand coordinates
+                const defaultZoom = 12;
+
+                // Fit bounds or set view initially and on updates
+                if (locationsForFitBounds.length > 0) {
+                    map.fitBounds(locationsForFitBounds, { padding: [40, 40] });
                 } else {
-                    map.eachLayer(layer => {
-                        if (layer instanceof L.Marker) {
-                            map.removeLayer(layer);
-                        }
-                    });
+                    map.setView(defaultCenter, defaultZoom);
                 }
 
                 // Render Gateway Markers
-                Object.values(liveData.gateways).forEach(gw => {
-                    if (gw.lat && gw.lon) {
-                        const popupContent = `
-                            <b>${gw.name} (${gw.id})</b><br>
-                            Status: ${gw.status}
-                        `;
-                        const iconColor = gw.status === 'ONLINE' ? 'green' : 'red';
-                        const markerIcon = L.icon({
-                            iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColor}.png`,
-                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                            iconSize: [25, 41],
-                            iconAnchor: [12, 41],
-                            popupAnchor: [1, -34],
-                            shadowSize: [41, 41]
-                        });
-
-                        const marker = L.marker([gw.lat, gw.lon], { icon: markerIcon }).addTo(map)
-                            .bindPopup(popupContent);
-                        mapMarkers[gw.id] = marker;
+                Object.values(configuredGateways).forEach(gw => {
+                    if (gw.lat === null || gw.lon === null || isNaN(gw.lat) || isNaN(gw.lon)) {
+                        console.warn(`Gateway ${gw.id} has no valid coordinates configured, skipping map marker.`);
+                        return;
                     }
+                    const liveGw = liveData.gateways[gw.id];
+                    const status = liveGw ? liveGw.status : 'OFFLINE'; // Default to offline if no live data
+                    const statusText = translations[currentLang][status.toLowerCase()] || translations[currentLang].unknown;
+                    const lastSeenTime = liveGw && liveGw.lastSeen ? formatTimestamp(liveGw.lastSeen) : translations[currentLang].unknown;
+                    
+                    const popupContent = `
+                        <b>${gw.name} (${gw.id})</b><br>
+                        ${translations[currentLang].status}: ${statusText}<br>
+                        ${translations[currentLang].lastSeen}: ${lastSeenTime}
+                    `;
+                    // Use different colored markers based on status
+                    const iconColor = status === 'ONLINE' ? 'green' : (status === 'OFFLINE' ? 'red' : 'grey'); // Grey for unknown
+                    const markerIcon = L.icon({
+                        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColor}.png`,
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    });
+
+                    const marker = L.marker([gw.lat, gw.lon], { icon: markerIcon }).addTo(map)
+                        .bindPopup(popupContent);
+                    gatewayMapMarkers[gw.id] = marker;
                 });
 
                 // Render Dolly Markers
                 Object.values(liveData.dollies).forEach(dolly => {
-                    const gateway = liveData.gateways[dolly.gatewayId];
-                    if (gateway && gateway.lat && gateway.lon) {
+                    const gateway = configuredGateways[dolly.gatewayId]; // Get location from configured gateway
+                    if (gateway && gateway.lat !== null && gateway.lon !== null && !isNaN(gateway.lat) && !isNaN(gateway.lon)) {
+                        const statusText = translations[currentLang][dolly.status.toLowerCase()] || translations[currentLang].unknown;
+                        const lastSeenTime = dolly.lastSeen ? formatTimestamp(dolly.lastSeen) : translations[currentLang].unknown;
                         const popupContent = `
-                            <b>Dolly ID: ${dolly.id}</b><br>
-                            Status: ${dolly.status}<br>
-                            Gateway: ${dolly.gatewayId || 'N/A'}<br>
-                            RSSI: ${dolly.rssi !== undefined ? dolly.rssi : 'N/A'} dBm<br>
-                            Distance: ${dolly.distance || 'N/A'} m
+                            <b>${translations[currentLang].id}: ${dolly.id}</b><br>
+                            ${translations[currentLang].status}: ${statusText}<br>
+                            ${translations[currentLang].gateway}: ${dolly.gatewayId || translations[currentLang].unknown}<br>
+                            ${translations[currentLang].rssi}: ${dolly.rssi !== undefined ? dolly.rssi : translations[currentLang].unknown} dBm<br>
+                            ${translations[currentLang].distance}: ${dolly.distance || translations[currentLang].unknown}<br>
+                            ${translations[currentLang].lastSeen}: ${lastSeenTime}
                         `;
                         const dollyIcon = createDollyIcon(dolly.status, dolly.id);
 
                         const marker = L.marker([gateway.lat, gateway.lon], { icon: dollyIcon }).addTo(map)
                             .bindPopup(popupContent);
                         dollyMapMarkers[dolly.id] = marker;
+                    } else {
+                        console.warn(`Dolly ${dolly.id} associated with unknown or invalid gateway ${dolly.gatewayId}, skipping map marker.`);
                     }
                 });
 
-                map.invalidateSize();
+                map.invalidateSize(); // Crucial for map rendering when tab is hidden initially
             }
 
-            // --- EVENT HANDLERS ---
-            function handleTabSwitch(e) {
-                const currentActiveMainButton = document.querySelector('.main-tab-button.active');
-                if (currentActiveMainButton) {
-                    currentActiveMainButton.classList.remove('active');
-                }
+            /**
+             * Renders historical data charts.
+             * This uses mock data as a full backend/database is not implemented in this frontend-only solution.
+             */
+            function renderHistoricalCharts() {
+                // Get CSS variables
+                const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary');
+                const successColor = getComputedStyle(document.documentElement).getPropertyValue('--success');
 
-                const currentVisibleContent = document.querySelector('.tab-content:not(.hidden)');
-                if (currentVisibleContent) {
-                    currentVisibleContent.classList.add('hidden');
-                }
+                // Mock data for Hourly Message Rate (past 24 hours)
+                const hourlyLabels = Array.from({length: 24}, (_, i) => {
+                    const hour = (new Date().getHours() + i + 1) % 24;
+                    return `${hour}:00`;
+                });
+                const hourlyData = Array.from({length: 24}, () => Math.floor(Math.random() * 50) + 10); // Random messages per hour
+
+                const hourlyMessageRateChartConfig = {
+                    type: 'line',
+                    data: {
+                        labels: hourlyLabels,
+                        datasets: [{
+                            label: translations[currentLang].hourlyMessageRate,
+                            data: hourlyData,
+                            borderColor: primaryColor, // Use fetched CSS variable
+                            backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: translations[currentLang].hourlyMessageRate,
+                                font: {
+                                    family: currentLang === 'th' ? "'Noto Sans Thai', sans-serif" : "'Inter', sans-serif",
+                                    size: 16
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Hour',
+                                    font: {
+                                        family: currentLang === 'th' ? "'Noto Sans Thai', sans-serif" : "'Inter', sans-serif"
+                                    }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Messages',
+                                    font: {
+                                        family: currentLang === 'th' ? "'Noto Sans Thai', sans-serif" : "'Inter', sans-serif"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                // Mock data for Gateway Online Percentage (past 7 days)
+                const dailyLabels = Array.from({length: 7}, (_, i) => {
+                    const d = new Date();
+                    d.setDate(d.getDate() - (6 - i)); // Show last 7 days including today
+                    return d.toLocaleDateString(currentLang === 'th' ? 'th-TH' : 'en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                });
+                const dailyGatewayData = Array.from({length: 7}, () => Math.floor(Math.random() * 20) + 70); // Random percentage between 70-90%
+
+                const gatewayOnlinePercentageChartConfig = {
+                    type: 'bar',
+                    data: {
+                        labels: dailyLabels,
+                        datasets: [{
+                            label: translations[currentLang].gatewayOnlinePercentage,
+                            data: dailyGatewayData,
+                            backgroundColor: successColor, // Use fetched CSS variable
+                            borderColor: successColor,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: translations[currentLang].gatewayOnlinePercentage,
+                                font: {
+                                    family: currentLang === 'th' ? "'Noto Sans Thai', sans-serif" : "'Inter', sans-serif",
+                                    size: 16
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date',
+                                    font: {
+                                        family: currentLang === 'th' ? "'Noto Sans Thai', sans-serif" : "'Inter', sans-serif"
+                                    }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Online (%)',
+                                    font: {
+                                        family: currentLang === 'th' ? "'Noto Sans Thai', sans-serif" : "'Inter', sans-serif"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                // New Mock data for Dolly Online Percentage (past 7 days)
+                const dailyDollyData = Array.from({length: 7}, () => Math.floor(Math.random() * 30) + 65); // Random percentage between 65-95%
+
+                const dollyOnlinePercentageChartConfig = {
+                    type: 'line', // Line chart for trend
+                    data: {
+                        labels: dailyLabels, // Reuse daily labels
+                        datasets: [{
+                            label: translations[currentLang].dollyOnlinePercentage,
+                            data: dailyDollyData,
+                            borderColor: primaryColor, // Use primary color for dolly chart
+                            backgroundColor: 'rgba(79, 70, 229, 0.2)', // Light primary color for fill
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: translations[currentLang].dollyOnlinePercentage,
+                                font: {
+                                    family: currentLang === 'th' ? "'Noto Sans Thai', sans-serif" : "'Inter', sans-serif",
+                                    size: 16
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date',
+                                    font: {
+                                        family: currentLang === 'th' ? "'Noto Sans Thai', sans-serif" : "'Inter', sans-serif"
+                                    }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Online (%)',
+                                    font: {
+                                        family: currentLang === 'th' ? "'Noto Sans Thai', sans-serif" : "'Inter', sans-serif"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                // Destroy existing charts before re-creating
+                if (hourlyMessageRateChartInstance) hourlyMessageRateChartInstance.destroy();
+                hourlyMessageRateChartInstance = new Chart(document.getElementById('hourlyMessageRateChart').getContext('2d'), hourlyMessageRateChartConfig);
+
+                if (gatewayOnlinePercentageChartInstance) gatewayOnlinePercentageChartInstance.destroy();
+                gatewayOnlinePercentageChartInstance = new Chart(document.getElementById('gatewayOnlinePercentageChart').getContext('2d'), gatewayOnlinePercentageChartConfig);
+
+                // Destroy and create the new Dolly Online Percentage Chart
+                if (dollyOnlinePercentageChartInstance) dollyOnlinePercentageChartInstance.destroy();
+                dollyOnlinePercentageChartInstance = new Chart(document.getElementById('dollyOnlinePercentageChart').getContext('2d'), dollyOnlinePercentageChartConfig);
+            }
+
+
+            // --- EVENT HANDLERS ---
+            /**
+             * Handles switching between main dashboard tabs.
+             * @param {Event} e - The click event.
+             */
+            function handleTabSwitch(e) {
+                document.querySelectorAll('.main-tab-button').forEach(button => {
+                    button.classList.remove('active');
+                });
+
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
 
                 e.target.classList.add('active');
                 const targetTabId = e.target.dataset.tab;
                 
-                const newVisibleContent = document.getElementById(targetTabId);
-                if (newVisibleContent) {
-                    newVisibleContent.classList.remove('hidden');
-                }
+                document.getElementById(targetTabId).classList.remove('hidden');
 
-                if (targetTabId === 'live-data' && map) {
-                    map.invalidateSize();
+                // Invalidate map size after showing the map tab, with a short delay
+                if (targetTabId === 'live-data') {
+                    // Initialize map only the first time the tab is opened
+                    if (!mapInitialized) {
+                        initializeMap();
+                    }
+                    setTimeout(() => {
+                        map.invalidateSize();
+                    }, 200);
+                }
+                // Re-render historical charts if switching to that tab
+                if (targetTabId === 'historical-trends') {
+                    renderHistoricalCharts();
                 }
             }
 
+            /**
+             * Handles switching between sub-tabs within the live data section (Gateways vs. Dollies tables).
+             * @param {Event} e - The click event.
+             */
             function handleSubTabSwitch(e) {
                 const showGatewaysBtn = document.getElementById('show-gateways-btn');
                 const showDolliesBtn = document.getElementById('show-dollies-btn');
                 const gatewaysTableContainer = document.getElementById('gateways-table-container');
                 const dolliesTableContainer = document.getElementById('dollies-table-container');
 
-                if (showGatewaysBtn && showDolliesBtn && gatewaysTableContainer && dolliesTableContainer) {
-                    if (e.target.id === 'show-gateways-btn') {
-                        gatewaysTableContainer.classList.remove('hidden');
-                        dolliesTableContainer.classList.add('hidden');
-                        showGatewaysBtn.classList.add('bg-indigo-50', 'text-indigo-700');
-                        showDolliesBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
-                    } else if (e.target.id === 'show-dollies-btn') {
-                        gatewaysTableContainer.classList.add('hidden');
-                        dolliesTableContainer.classList.remove('hidden');
-                        showGatewaysBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
-                        showDolliesBtn.classList.add('bg-indigo-50', 'text-indigo-700');
-                    }
+                // Remove active classes from all sub-tab buttons
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active', 'bg-indigo-50', 'text-indigo-700');
+                    btn.classList.add('hover:bg-indigo-50'); // Re-add hover effect
+                });
+
+                if (e.target.id === 'show-gateways-btn') {
+                    gatewaysTableContainer.classList.remove('hidden');
+                    dolliesTableContainer.classList.add('hidden');
+                    showGatewaysBtn.classList.add('active', 'bg-indigo-50', 'text-indigo-700');
+                    showGatewaysBtn.classList.remove('hover:bg-indigo-50');
+                } else if (e.target.id === 'show-dollies-btn') {
+                    gatewaysTableContainer.classList.add('hidden');
+                    dolliesTableContainer.classList.remove('hidden');
+                    showDolliesBtn.classList.add('active', 'bg-indigo-50', 'text-indigo-700');
+                    showDolliesBtn.classList.remove('hover:bg-indigo-50');
                 }
             }
 
-            function handleFormSubmit(e) {
+            /**
+             * Handles form submission for adding or editing a gateway.
+             * @param {Event} e - The form submission event.
+             */
+            async function handleFormSubmit(e) {
                 e.preventDefault();
                 const editId = document.getElementById('edit-id').value;
-                const gatewayId = document.getElementById('gatewayId').value;
-                const gatewayName = document.getElementById('gatewayName').value;
+                const gatewayId = document.getElementById('gatewayId').value.trim();
+                const gatewayName = document.getElementById('gatewayName').value.trim();
                 const latitude = parseFloat(document.getElementById('latitude').value);
                 const longitude = parseFloat(document.getElementById('longitude').value);
 
                 if (!gatewayId || !gatewayName || isNaN(latitude) || isNaN(longitude)) {
-                    alert('Please fill all gateway fields correctly.');
+                    await showAlert(translations[currentLang].alertFillAllFields);
                     return;
                 }
 
-                const newConfigGateway = {
+                // If editing an existing gateway with a changed ID
+                if (editId && editId !== gatewayId) {
+                    // Confirm before deleting old entry
+                    const confirmed = await showConfirm(`${translations[currentLang].alertDeleteConfirm} ${editId} to change its ID to ${gatewayId}?`);
+                    if (!confirmed) {
+                        return; // Stop if user cancels
+                    }
+                    delete configuredGateways[editId];
+                    if (liveData.gateways[editId]) {
+                        delete liveData.gateways[editId];
+                    }
+                }
+                
+                configuredGateways[gatewayId] = {
                     id: gatewayId,
                     name: gatewayName,
                     lat: latitude,
                     lon: longitude
                 };
 
-                if (editId && editId !== gatewayId) {
-                    delete configuredGateways[editId];
-                    delete liveData.gateways[editId];
-                }
-                
-                configuredGateways[gatewayId] = newConfigGateway;
-                liveData.gateways[gatewayId] = { ...liveData.gateways[gatewayId] || { status: 'UNKNOWN' }, ...newConfigGateway };
+                // Update or create entry in liveData, preserving existing status/lastSeen if any
+                liveData.gateways[gatewayId] = { 
+                    ...liveData.gateways[gatewayId] || { status: 'UNKNOWN', lastSeen: 0 }, 
+                    ...configuredGateways[gatewayId] 
+                };
 
                 renderAll();
                 gatewayForm.reset();
-                document.getElementById('edit-id').value = '';
+                document.getElementById('edit-id').value = ''; // Clear edit ID
+                showNotification(translations[currentLang].gatewaySaved, 'success');
             }
 
+            /**
+             * Clears the gateway form.
+             */
             function handleClearForm() {
                 gatewayForm.reset();
                 document.getElementById('edit-id').value = '';
             }
             
+            /**
+             * Populates the form with data for editing a gateway.
+             * @param {Event} e - The click event from the edit button.
+             */
             function handleEdit(e) {
-                const id = e.target.closest('.edit-btn').dataset.id;
+                const id = e.target.closest('button').dataset.id;
                 const gateway = configuredGateways[id];
                 if (gateway) {
                     document.getElementById('edit-id').value = id;
@@ -1212,18 +2145,39 @@
                 }
             }
 
-            function handleDelete(e) {
-                 const id = e.target.closest('.delete-btn').dataset.id;
-                 if (confirm(`Are you sure you want to delete configured gateway ${id}?`)) {
+            /**
+             * Handles deleting a gateway from configuration.
+             * @param {Event} e - The click event from the delete button.
+             */
+            async function handleDelete(e) {
+                 const id = e.target.closest('button').dataset.id;
+                 const confirmed = await showConfirm(`${translations[currentLang].alertDeleteConfirm} ${id}?`);
+                 if (confirmed) {
                     delete configuredGateways[id];
-                    delete liveData.gateways[id];
+                    // Also remove from liveData
+                    if (liveData.gateways[id]) {
+                        delete liveData.gateways[id];
+                    }
                     renderAll();
+                    showNotification(translations[currentLang].gatewayDeleted, 'success');
                  }
+            }
+
+            // --- SEARCH FILTERING ---
+            function setupSearchFilters() {
+                searchGatewaysInput.addEventListener('input', renderTables);
+                searchDolliesInput.addEventListener('input', renderTables);
             }
             
             // --- INITIALIZATION ---
+            /**
+             * Initializes the dashboard by setting up language, event listeners, and initial renders.
+             */
             function init() {
-                // Setup tab event listeners
+                // Set initial language
+                setLanguage(currentLang);
+
+                // Setup main tab event listeners
                 document.querySelectorAll('.main-tab-button').forEach(button => {
                     button.addEventListener('click', handleTabSwitch);
                 });
@@ -1236,21 +2190,25 @@
                 gatewayForm.addEventListener('submit', handleFormSubmit);
                 document.getElementById('clear-form-btn').addEventListener('click', handleClearForm);
                 
-                // Setup language
-                setLanguage('en');
+                // Setup language toggle listeners
+                document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
+                document.getElementById('lang-th').addEventListener('click', () => setLanguage('th'));
                 
                 // Setup scroll to top button
                 scrollTopBtn.addEventListener('click', () => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
                 
-                // Start clock and stats
+                // Set up search filters
+                setupSearchFilters();
+
+                // Start clock and stats update intervals
                 setInterval(updateClock, 1000);
-                updateClock();
-                startTime = Date.now();
-                updateStats();
-                
-                // Initial render
+                messageRateInterval = setInterval(updateStats, 60000); // Update stats every minute
+                updateClock(); // Initial call
+                updateStats(); // Initial call
+
+                // Initial render of all components (map is now deferred)
                 renderAll();
                 
                 // Connect to MQTT via proxy
