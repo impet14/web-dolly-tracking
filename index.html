@@ -412,14 +412,147 @@
         #notification-bar.error { background-color: var(--danger); }
         #notification-bar.warning { background-color: var(--warning); }
         #notification-bar.info { background-color: var(--primary); }
+
+        /* Login Page Specific Styles */
+        .login-bg {
+            background: radial-gradient(circle at top left, #a78bfa, #818cf8, #6366f1); /* Gradient purple/blue */
+            background-size: 200% 200%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .password-input-container {
+            position: relative;
+        }
+
+        .password-toggle-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6b7280; /* Gray 500 */
+            font-size: 1.1rem;
+            transition: color 0.2s ease;
+        }
+
+        .password-toggle-icon:hover {
+            color: var(--primary);
+        }
+
+        .login-button-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* LLM Summary Modal specific styling */
+        #llm-summary-modal .modal-content {
+            max-width: 600px;
+            text-align: left;
+            padding: 3rem;
+        }
+        #llm-summary-content {
+            white-space: pre-wrap; /* Preserves whitespace and line breaks */
+            font-size: 0.95rem;
+            color: #334155; /* Slate 700 */
+            line-height: 1.6;
+            max-height: 400px; /* Limit height to prevent modal from growing too large */
+            overflow-y: auto; /* Enable scrolling for long content */
+            padding-right: 10px; /* Space for scrollbar */
+        }
+        #llm-summary-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        #llm-summary-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        #llm-summary-content::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        #llm-summary-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        #llm-summary-modal .close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #64748b; /* Slate 500 */
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        #llm-summary-modal .close-button:hover {
+            color: #1e293b; /* Slate 800 */
+        }
+
+        /* New keyframes for fadeInUp */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Apply to the login card for a smooth entrance */
+        .login-card-animated {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Animation for welcome text */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .welcome-text-animated {
+            animation: fadeIn 1s ease-out forwards;
+            animation-delay: 0.3s; /* Delay for cascade effect */
+        }
+
     </style>
     
     <script>
         // Translation object for Thai/English
         const translations = {
             en: {
-                title: "Dolly Tracking Dashboard",
-                subtitle: "Real-time monitoring for Thai Post Office dolly network",
+                title: "Thai Post National Dolly Tracking Dashboard",
+                subtitle: "Real-time tracking and comprehensive insights for the nationwide Thai Post dolly fleet.",
                 dashboard: "Dashboard Overview",
                 liveData: "Live Map & Data",
                 configuration: "Configuration",
@@ -489,15 +622,30 @@
                 daysAgo: "days ago",
                 hourlyMessageRate: "Hourly Message Rate",
                 gatewayOnlinePercentage: "Gateway Online Percentage",
-                dollyOnlinePercentage: "Dolly Online Percentage" // New translation
+                dollyOnlinePercentage: "Dolly Online Percentage",
+                login: "Login",
+                username: "Username",
+                password: "Password",
+                loginFailed: "Login failed. Invalid username or password.",
+                logout: "Logout",
+                userManagement: "User Management",
+                forgotPassword: "Forgot Password?",
+                createAccount: "Create Account",
+                generateSummary: "Generate Network Summary",
+                networkSummary: "Network Summary",
+                generatingSummary: "Generating summary...",
+                welcomeMorning: "Good morning! Welcome!",
+                welcomeAfternoon: "Good afternoon! Welcome!",
+                welcomeEvening: "Good evening! Welcome!",
+                loginSystemIntro: "Welcome to the Thai Post National Dolly Fleet Monitoring System. Your gateway to nationwide logistics insights."
             },
             th: {
-                title: "แดชบอร์ดติดตามรถเข็น",
-                subtitle: "ระบบติดตามเครือข่ายรถเข็นไปรษณีย์ไทยแบบเรียลไทม์",
+                title: "แดชบอร์ดติดตามรถเข็นไปรษณีย์ไทยทั่วประเทศ",
+                subtitle: "ระบบติดตามและข้อมูลเชิงลึกแบบเรียลไทม์สำหรับรถเข็นไปรษณีย์ไทยทั่วประเทศ",
                 dashboard: "ภาพรวมแดชบอร์ด",
                 liveData: "แผนที่และข้อมูลสด",
                 configuration: "การกำหนดค่า",
-                historicalTrends: "แนวโน้มย้อนหลัง", // New tab translation
+                historicalTrends: "ข้อมูลย้อนหลัง", // Changed from "แนวโน้มย้อนหลัง" to "ข้อมูลย้อนหลัง"
                 networkHealth: "สถานะเครือข่าย",
                 networkDesc: "ข้อมูลเครือข่ายรถเข็นแบบเรียลไทม์",
                 totalGateways: "เกตเวย์ทั้งหมด",
@@ -563,7 +711,22 @@
                 daysAgo: "วันที่แล้ว",
                 hourlyMessageRate: "อัตราข้อความรายชั่วโมง",
                 gatewayOnlinePercentage: "เปอร์เซ็นต์เกตเวย์ออนไลน์",
-                dollyOnlinePercentage: "เปอร์เซ็นต์รถเข็นออนไลน์" // New translation
+                dollyOnlinePercentage: "เปอร์เซ็นต์รถเข็นออนไลน์",
+                login: "เข้าสู่ระบบ",
+                username: "ชื่อผู้ใช้",
+                password: "รหัสผ่าน",
+                loginFailed: "เข้าสู่ระบบล้มเหลว ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
+                logout: "ออกจากระบบ",
+                userManagement: "การจัดการผู้ใช้",
+                forgotPassword: "ลืมรหัสผ่าน?",
+                createAccount: "สร้างบัญชี",
+                generateSummary: "สร้างสรุปสถานะเครือข่าย",
+                networkSummary: "สรุปสถานะเครือข่าย",
+                generatingSummary: "กำลังสร้างสรุป...",
+                welcomeMorning: "อรุณสวัสดิ์! ยินดีต้อนรับ!",
+                welcomeAfternoon: "สวัสดีตอนบ่าย! ยินดีต้อนรับ!",
+                welcomeEvening: "สวัสดีตอนเย็น! ยินดีต้อนรับ!",
+                loginSystemIntro: "ยินดีต้อนรับสู่ระบบติดตามรถเข็นไปรษณีย์ไทยทั่วประเทศ ประตูสู่ข้อมูลเชิงลึกด้านโลจิสติกส์ระดับชาติของคุณ"
             }
         };
         
@@ -584,8 +747,55 @@
         <span id="notification-message"></span>
     </div>
 
-    <!-- Main Container -->
-    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl">
+    <!-- Login Container -->
+    <div id="login-container" class="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100 login-bg">
+        <div class="card p-8 w-full max-w-md login-card login-card-animated">
+            <div class="text-center mb-6">
+                <p id="welcome-message" class="text-lg text-gray-700 font-semibold mb-2 welcome-text-animated"></p>
+                <p class="text-sm text-gray-500 mb-4" data-i18n="loginSystemIntro">Welcome to the Thai Post National Dolly Fleet Monitoring System. Your gateway to nationwide logistics insights.</p>
+                <i class="fas fa-box-open text-6xl text-indigo-600 mb-4 opacity-80"></i>
+                <h2 class="text-3xl font-bold text-gray-800" data-i18n="login">Login</h2>
+            </div>
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label for="login-username" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="username">Username</label>
+                    <input type="text" id="login-username" name="username" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200" autocomplete="username">
+                </div>
+                <div class="password-input-container">
+                    <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="password">Password</label>
+                    <input type="password" id="login-password" name="password" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200" autocomplete="current-password">
+                    <span class="password-toggle-icon" id="toggle-password">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-gray-900">
+                            Remember me
+                        </label>
+                    </div>
+                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 hover:underline" data-i18n="forgotPassword">Forgot Password?</a>
+                </div>
+
+                <div id="login-error-message" class="text-red-600 text-sm text-center hidden"></div>
+
+                <button type="submit" id="login-button" class="btn-primary w-full py-3 px-6 rounded-lg font-medium flex items-center justify-center gap-2 transform transition duration-200 hover:scale-[1.02]">
+                    <span class="login-button-content">
+                        <span id="login-button-text" data-i18n="login">Login</span>
+                        <div id="login-spinner" class="spinner hidden"></div>
+                    </span>
+                </button>
+            </form>
+            <p class="text-sm text-gray-500 text-center mt-6">Admin: admin/admin | User: user/user</p>
+            <div class="text-center mt-4">
+                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 hover:underline text-sm" data-i18n="createAccount">Create Account</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="main-app-container" class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl hidden">
         <!-- Header -->
         <header class="mb-8 text-center card p-6 relative overflow-hidden">
             <!-- Decorative elements for visual appeal -->
@@ -593,17 +803,18 @@
             <div class="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-indigo-100 opacity-50"></div>
             <div class="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-blue-100 opacity-50"></div>
             
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2" data-i18n="title">Dolly Tracking Dashboard</h1>
-            <p class="text-lg text-gray-600 mb-4" data-i18n="subtitle">Real-time monitoring for Thai Post Office dolly network</p>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2" data-i18n="title">Thai Post National Dolly Tracking Dashboard</h1>
+            <p class="text-lg text-gray-600 mb-4" data-i18n="subtitle">Real-time tracking and comprehensive insights for the nationwide Thai Post dolly fleet.</p>
             
             <div class="flex flex-wrap justify-center items-center text-sm font-light text-gray-500 gap-4 mt-4">
-                <div><span data-i18n="user">User ID</span>: <span class="font-semibold text-gray-700">SPA User</span></div>
+                <div id="user-info-display"><span data-i18n="user">User ID</span>: <span class="font-semibold text-gray-700" id="current-user-info">Guest</span></div>
                 <div id="mqtt-status-container">
                     <span class="connection-indicator connecting"></span>
                     <span data-i18n="mqttStatus">MQTT Status</span>: 
                     <span class="font-bold" id="mqtt-status-text" data-i18n="connecting">Connecting...</span>
                 </div>
                 <div id="current-time" class="font-medium">00:00:00 +07:00</div>
+                <button id="logout-btn" class="ml-4 py-1 px-3 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-200" data-i18n="logout">Logout</button>
             </div>
         </header>
 
@@ -646,14 +857,21 @@
             <button id="tab-live-data" class="main-tab-button" data-tab="live-data" data-i18n="liveData">Live Map & Data</button>
             <button id="tab-configuration" class="main-tab-button" data-tab="configuration" data-i18n="configuration">Configuration</button>
             <button id="tab-historical-trends" class="main-tab-button" data-tab="historical-trends" data-i18n="historicalTrends">Historical Trends</button>
+            <button id="tab-user-management" class="main-tab-button hidden" data-tab="user-management" data-i18n="userManagement">User Management</button>
         </nav>
 
         <!-- Tab Content Areas -->
         <div id="dashboard" class="tab-content">
             <section class="mb-12">
-                <div class="mb-8 pb-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2" data-i18n="networkHealth">Network Health Overview</h2>
-                    <p class="text-gray-500 max-w-3xl" data-i18n="networkDesc">Real-time status of your dolly network</p>
+                <div class="mb-8 pb-4 flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2" data-i18n="networkHealth">Network Health Overview</h2>
+                        <p class="text-gray-500 max-w-3xl" data-i18n="networkDesc">Real-time status of your dolly network</p>
+                    </div>
+                    <button id="generate-summary-btn" class="btn-primary py-3 px-6 rounded-lg font-medium flex items-center justify-center gap-2 transform transition duration-200 hover:scale-[1.02]">
+                        <span id="summary-button-text" data-i18n="generateSummary">✨ Generate Network Summary</span>
+                        <div id="summary-spinner" class="spinner hidden w-5 h-5 border-2"></div>
+                    </button>
                 </div>
 
                 <!-- KPI Cards -->
@@ -874,6 +1092,31 @@
                 </div>
             </section>
         </div>
+
+        <div id="user-management" class="tab-content hidden">
+            <section class="mb-12">
+                <div class="mb-8 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2" data-i18n="userManagement">User Management</h2>
+                    <p class="text-gray-500 max-w-3xl">Manage user accounts and roles for the dashboard.</p>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">User Accounts</h3>
+                    <div class="overflow-y-auto max-h-[350px] custom-scroll">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50 sticky top-0">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Username</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-list-tbody" class="bg-white divide-y divide-gray-200">
+                                <!-- Users will be populated here by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
     
     <!-- Floating Action Button -->
@@ -888,6 +1131,21 @@
             <p id="modal-message" class="text-gray-700 mb-6"></p>
             <div id="modal-buttons" class="modal-buttons">
                 <!-- Buttons will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- LLM Summary Modal -->
+    <div id="llm-summary-modal" class="modal">
+        <div class="modal-content relative">
+            <button class="close-button" onclick="document.getElementById('llm-summary-modal').classList.remove('show');">&times;</button>
+            <h3 id="llm-summary-title" class="text-xl font-bold mb-4 text-gray-800 text-center" data-i18n="networkSummary">Network Summary</h3>
+            <div id="llm-summary-loading" class="flex justify-center items-center py-8 hidden">
+                <div class="spinner w-8 h-8 border-4 border-indigo-200 border-t-indigo-600"></div>
+                <p class="ml-4 text-gray-600" data-i18n="generatingSummary">Generating summary...</p>
+            </div>
+            <div id="llm-summary-content" class="text-gray-700">
+                <!-- Summary will be injected here -->
             </div>
         </div>
     </div>
@@ -919,6 +1177,13 @@
             let lastMinuteMessageCount = 0; // To track messages per minute for KPI
             let messageRateInterval; // Interval for updating message rate KPI
 
+            // --- AUTHENTICATION & ROLES (MOCK) ---
+            let currentUser = null; // Stores { username: '...', role: '...' } or null
+            const mockUsers = {
+                'admin': { password: 'admin', role: 'admin' },
+                'user': { password: 'user', role: 'user' }
+            };
+
             // --- CHART & MAP INSTANCES ---
             let gatewaysChartInstance = null;
             let dolliesChartInstance = null;
@@ -934,6 +1199,22 @@
             let dollyOnlinePercentageChartInstance = null; // New chart instance
 
             // --- DOM ELEMENTS ---
+            const loginContainer = document.getElementById('login-container');
+            const mainAppContainer = document.getElementById('main-app-container');
+            const loginForm = document.getElementById('login-form');
+            const loginUsernameInput = document.getElementById('login-username');
+            const loginPasswordInput = document.getElementById('login-password');
+            const loginButton = document.getElementById('login-button');
+            const loginButtonText = document.getElementById('login-button-text');
+            const loginSpinner = document.getElementById('login-spinner');
+            const loginErrorMessage = document.getElementById('login-error-message');
+            const togglePassword = document.getElementById('toggle-password');
+            const welcomeMessageEl = document.getElementById('welcome-message');
+
+
+            const currentUserInfoEl = document.getElementById('current-user-info');
+            const logoutBtn = document.getElementById('logout-btn');
+
             const gatewaysTbody = document.getElementById('gateways-tbody');
             const dolliesTbody = document.getElementById('dollies-tbody');
             const configGatewaysTbody = document.getElementById('config-gateways-tbody');
@@ -962,6 +1243,143 @@
             // Search inputs
             const searchGatewaysInput = document.getElementById('search-gateways');
             const searchDolliesInput = document.getElementById('search-dollies');
+            
+            // User Management Table
+            const userListTbody = document.getElementById('user-list-tbody');
+
+            // LLM Summary Elements
+            const generateSummaryBtn = document.getElementById('generate-summary-btn');
+            const summaryButtonText = document.getElementById('summary-button-text');
+            const summarySpinner = document.getElementById('summary-spinner');
+            const llmSummaryModal = document.getElementById('llm-summary-modal');
+            const llmSummaryTitle = document.getElementById('llm-summary-title');
+            const llmSummaryContent = document.getElementById('llm-summary-content');
+            const llmSummaryLoading = document.getElementById('llm-summary-loading');
+
+
+            // --- AUTHENTICATION FUNCTIONS ---
+            /**
+             * Shows the login screen and hides the main application.
+             */
+            function showLoginScreen() {
+                mainAppContainer.classList.add('hidden');
+                loginContainer.classList.remove('hidden');
+                loginForm.reset(); // Clear form fields
+                loginUsernameInput.focus(); // Focus username field for convenience
+                updateMqttStatusDisplay(); // Ensure MQTT status reflects disconnected state on logout
+                loginErrorMessage.classList.add('hidden'); // Hide any previous error messages
+                updateWelcomeMessage(); // Update welcome message on login screen
+            }
+
+            /**
+             * Shows the main application and hides the login screen.
+             */
+            function showMainApp() {
+                loginContainer.classList.add('hidden');
+                mainAppContainer.classList.remove('hidden');
+                updateUIBasedOnRole();
+                renderAll(); // Re-render all dashboard elements after login
+                connectToMQTT(); // Establish MQTT connection after successful login
+            }
+
+            /**
+             * Handles the login attempt.
+             * @param {Event} e - The form submission event.
+             */
+            async function handleLogin(e) {
+                e.preventDefault();
+                loginErrorMessage.classList.add('hidden'); // Hide previous error
+                loginButton.disabled = true; // Disable button
+                loginSpinner.classList.remove('hidden'); // Show spinner
+                loginButtonText.classList.add('hidden'); // Hide text
+
+                const username = loginUsernameInput.value.trim();
+                const password = loginPasswordInput.value.trim();
+
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                if (mockUsers[username] && mockUsers[username].password === password) {
+                    currentUser = { username: username, role: mockUsers[username].role };
+                    sessionStorage.setItem('currentUser', JSON.stringify(currentUser)); // Store mock user in session
+                    showMainApp();
+                } else {
+                    loginErrorMessage.textContent = translations[currentLang].loginFailed;
+                    loginErrorMessage.classList.remove('hidden');
+                }
+
+                loginButton.disabled = false; // Re-enable button
+                loginSpinner.classList.add('hidden'); // Hide spinner
+                loginButtonText.classList.remove('hidden'); // Show text
+            }
+
+            /**
+             * Handles the logout action.
+             */
+            function handleLogout() {
+                currentUser = null;
+                sessionStorage.removeItem('currentUser');
+                disconnectFromMQTT(); // Disconnect MQTT on logout
+                showLoginScreen();
+            }
+
+            /**
+             * Updates UI elements based on the current user's role.
+             */
+            function updateUIBasedOnRole() {
+                const isAdmin = currentUser && currentUser.role === 'admin';
+
+                // Update user info display
+                currentUserInfoEl.textContent = currentUser ? `${currentUser.username} (${currentUser.role})` : 'Guest';
+                
+                // Hide/show Configuration tab
+                const configTab = document.getElementById('tab-configuration');
+                if (isAdmin) {
+                    configTab.classList.remove('hidden');
+                } else {
+                    configTab.classList.add('hidden');
+                    // If user is not admin and is currently on config tab, switch to dashboard
+                    if (document.getElementById('configuration').classList.contains('active')) {
+                        document.getElementById('tab-dashboard').click(); 
+                    }
+                }
+
+                // Hide/show User Management tab
+                const userManagementTab = document.getElementById('tab-user-management');
+                if (isAdmin) {
+                    userManagementTab.classList.remove('hidden');
+                } else {
+                    userManagementTab.classList.add('hidden');
+                    // If user is not admin and is currently on user management tab, switch to dashboard
+                     if (document.getElementById('user-management').classList.contains('active')) {
+                        document.getElementById('tab-dashboard').click(); 
+                    }
+                }
+
+                // Update visibility of logout button
+                if (currentUser) {
+                    logoutBtn.classList.remove('hidden');
+                } else {
+                    logoutBtn.classList.add('hidden');
+                }
+            }
+
+            /**
+             * Updates the welcome message on the login screen based on the time of day.
+             */
+            function updateWelcomeMessage() {
+                const hour = new Date().getHours();
+                let welcomeKey;
+                if (hour < 12) {
+                    welcomeKey = 'welcomeMorning';
+                } else if (hour < 18) {
+                    welcomeKey = 'welcomeAfternoon';
+                } else {
+                    welcomeKey = 'welcomeEvening';
+                }
+                welcomeMessageEl.textContent = translations[currentLang][welcomeKey];
+            }
+
 
             // --- CUSTOM MODAL FUNCTIONS (Replaces native alert/confirm) ---
             /**
@@ -1079,10 +1497,14 @@
                 document.getElementById(`lang-${lang}`).classList.add('active');
                 
                 // Re-render components affected by language (charts, tables, MQTT status)
-                renderCharts();
+                // Note: historical charts are now rendered only when their tab is active.
+                renderCharts(); // Dashboard charts
                 renderConfigTable();
-                renderTables(); // Re-render to update 'Last Seen' and empty states
+                renderTables(); // Live data tables
                 updateMqttStatusDisplay();
+                updateUIBasedOnRole(); // Ensure role-based visibility is updated
+                renderUserManagement(); // Re-render user list for language
+                updateWelcomeMessage(); // Update welcome message for language
             }
             
             // --- REAL-TIME CLOCK & STATS ---
@@ -1174,6 +1596,12 @@
             function connectToMQTT() {
                 const WS_PROXY_URL = 'ws://localhost:9001'; 
                 
+                // Prevent multiple connections if already connecting or open
+                if (socket && (socket.readyState === WebSocket.CONNECTING || socket.readyState === WebSocket.OPEN)) {
+                    console.log("WebSocket already connecting or open. Skipping new connection attempt.");
+                    return;
+                }
+
                 updateMqttStatusDisplay(); // Set to 'Connecting...'
                 
                 try {
@@ -1181,6 +1609,7 @@
                 } catch (e) {
                     console.error("WebSocket connection initiation error:", e);
                     updateMqttStatusDisplay(); // Set to 'Disconnected'
+                    showNotification(translations[currentLang].mqttError + `: Failed to create WebSocket. Is the proxy server running?`, 'error', 7000);
                     return;
                 }
 
@@ -1342,18 +1771,30 @@
                     Object.values(liveData.gateways).forEach(gw => gw.status = 'OFFLINE');
                     Object.values(liveData.dollies).forEach(dolly => dolly.status = 'OFFLINE');
                     renderAll();
-                    showNotification(translations[currentLang].mqttDisconnected, 'error');
+                    showNotification(translations[currentLang].mqttDisconnected + `. Attempting to reconnect...`, 'error', 5000);
                     
                     // Attempt to reconnect after a delay
                     setTimeout(connectToMQTT, 3000);
                 };
 
                 socket.onerror = (error) => {
-                    console.error('WebSocket error:', error);
+                    const errorMessage = `WebSocket connection error: Could not connect to the proxy server. Please ensure that 'proxy.js' is running in your terminal and is accessible at ws://localhost:9001.`;
+                    console.error('[WebSocket ERROR] ', errorMessage, error); // Log the specific message and the error object
+                    showNotification(translations[currentLang].mqttError + `: ${errorMessage}`, 'error', 7000);
                     updateMqttStatusDisplay(); // Set to 'Disconnected'
-                    socket.close(); // Ensure proper closure to trigger onclose and reconnect
-                    showNotification(translations[currentLang].mqttError + `: ${error.message}`, 'error', 5000);
                 };
+            }
+
+            /**
+             * Disconnects the WebSocket connection gracefully.
+             */
+            function disconnectFromMQTT() {
+                if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
+                    socket.close();
+                    console.log("WebSocket connection gracefully closed.");
+                }
+                socket = null; // Clear the socket instance
+                updateMqttStatusDisplay(); // Update status display immediately
             }
             
             // --- HELPER FUNCTIONS ---
@@ -1431,6 +1872,7 @@
                             locationsForFitBounds.push([gw.lat, gw.lon]);
                         }
                     });
+                    // When resetting, consider all dollies based on their *current gateway location*
                     Object.values(liveData.dollies).forEach(dolly => {
                         const gateway = configuredGateways[dolly.gatewayId];
                         if (gateway && gateway.lat !== null && gateway.lon !== null && !isNaN(gateway.lat) && !isNaN(gateway.lon)) {
@@ -1455,11 +1897,15 @@
              */
             function renderAll() {
                 renderKPIs();
-                renderCharts();
+                renderCharts(); // Dashboard charts (always visible, safe to render on load)
                 renderTables();
                 renderConfigTable();
-                // renderMap() is now called conditionally by handleTabSwitch or initializeMap
-                renderHistoricalCharts(); 
+                // renderHistoricalCharts() and renderUserManagement() are now called by handleTabSwitch when their tabs are activated.
+                
+                // renderMap() is called conditionally by handleTabSwitch or initializeMap, or after data update
+                if (document.getElementById('live-data').classList.contains('active') && mapInitialized) {
+                    renderMap(); // Re-render map to reflect any new data/positions
+                }
             }
 
             /**
@@ -1658,31 +2104,38 @@
                 configGatewaysTbody.innerHTML = ''; // Clear current table content
                 const configuredGatewaysArray = Object.values(configuredGateways);
 
-                if (configuredGatewaysArray.length === 0) {
-                    configGatewaysTbody.innerHTML = `<tr><td colspan="3" class="px-4 py-3 text-center text-gray-500">${translations[currentLang].noGatewaysConfigured}</td></tr>`;
+                // Only render the configuration table if the user is an admin
+                if (currentUser && currentUser.role === 'admin') {
+                    document.getElementById('gateway-form').classList.remove('hidden');
+                    document.getElementById('config-gateways-tbody').closest('.card').classList.remove('hidden'); // Show table container
+                    if (configuredGatewaysArray.length === 0) {
+                        configGatewaysTbody.innerHTML = `<tr><td colspan="3" class="px-4 py-3 text-center text-gray-500">${translations[currentLang].noGatewaysConfigured}</td></tr>`;
+                    } else {
+                        configuredGatewaysArray.forEach(gw => {
+                            const row = `
+                                <tr class="hover:bg-indigo-50 transition duration-150 ease-in-out">
+                                    <td class="px-4 py-3 font-medium">${gw.id}</td>
+                                    <td class="px-4 py-3 text-gray-600">${gw.name}</td>
+                                    <td class="px-4 py-3 space-x-2">
+                                        <button class="edit-btn text-indigo-600 hover:text-indigo-900 transition duration-150" data-id="${gw.id}">
+                                            <i class="fas fa-edit mr-1"></i><span data-i18n="edit">${translations[currentLang].edit}</span>
+                                        </button>
+                                        <button class="delete-btn text-red-600 hover:text-red-900 transition duration-150" data-id="${gw.id}">
+                                            <i class="fas fa-trash-alt mr-1"></i><span data-i18n="delete">${translations[currentLang].delete}</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                            configGatewaysTbody.insertAdjacentHTML('beforeend', row);
+                        });
+                    }
+                    // Re-attach event listeners after re-rendering to ensure they work on new elements
+                    document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEdit));
+                    document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDelete));
                 } else {
-                    configuredGatewaysArray.forEach(gw => {
-                        const row = `
-                            <tr class="hover:bg-indigo-50 transition duration-150 ease-in-out">
-                                <td class="px-4 py-3 font-medium">${gw.id}</td>
-                                <td class="px-4 py-3 text-gray-600">${gw.name}</td>
-                                <td class="px-4 py-3 space-x-2">
-                                    <button class="edit-btn text-indigo-600 hover:text-indigo-900 transition duration-150" data-id="${gw.id}">
-                                        <i class="fas fa-edit mr-1"></i><span data-i18n="edit">${translations[currentLang].edit}</span>
-                                    </button>
-                                    <button class="delete-btn text-red-600 hover:text-red-900 transition duration-150" data-id="${gw.id}">
-                                        <i class="fas fa-trash-alt mr-1"></i><span data-i18n="delete">${translations[currentLang].delete}</span>
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                        configGatewaysTbody.insertAdjacentHTML('beforeend', row);
-                    });
+                    document.getElementById('gateway-form').classList.add('hidden');
+                    document.getElementById('config-gateways-tbody').closest('.card').classList.add('hidden'); // Hide table container
                 }
-
-                // Re-attach event listeners after re-rendering to ensure they work on new elements
-                document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEdit));
-                document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDelete));
             }
             
             /**
@@ -1731,20 +2184,37 @@
                         locationsForFitBounds.push([gw.lat, gw.lon]);
                     }
                 });
-                // Add dolly locations (based on their connected gateway's configured location)
+                
+                // Group dollies by gateway ID to handle overlaps
+                const dolliesByGateway = {};
                 Object.values(liveData.dollies).forEach(dolly => {
-                    const gateway = configuredGateways[dolly.gatewayId]; // Get location from configured gateway
-                    if (gateway && gateway.lat !== null && gateway.lon !== null && !isNaN(gateway.lat) && !isNaN(gateway.lon)) {
-                        locationsForFitBounds.push([gateway.lat, gateway.lon]);
+                    if (dolly.gatewayId) {
+                        if (!dolliesByGateway[dolly.gatewayId]) {
+                            dolliesByGateway[dolly.gatewayId] = [];
+                        }
+                        dolliesByGateway[dolly.gatewayId].push(dolly);
                     }
                 });
+
 
                 const defaultCenter = [13.736717, 100.523186]; // Bangkok, Thailand coordinates
                 const defaultZoom = 12;
 
                 // Fit bounds or set view initially and on updates
-                if (locationsForFitBounds.length > 0) {
-                    map.fitBounds(locationsForFitBounds, { padding: [40, 40] });
+                if (locationsForFitBounds.length > 0 || Object.keys(dolliesByGateway).length > 0) {
+                    // Include all gateway locations and effective dolly locations for bounding
+                    const allLocations = [...locationsForFitBounds];
+                    Object.keys(dolliesByGateway).forEach(gwId => {
+                        const gateway = configuredGateways[gwId];
+                        if (gateway && gateway.lat !== null && gateway.lon !== null && !isNaN(gateway.lat) && !isNaN(gateway.lon)) {
+                            allLocations.push([gateway.lat, gateway.lon]);
+                        }
+                    });
+                    if (allLocations.length > 0) {
+                        map.fitBounds(allLocations, { padding: [40, 40] });
+                    } else {
+                        map.setView(defaultCenter, defaultZoom);
+                    }
                 } else {
                     map.setView(defaultCenter, defaultZoom);
                 }
@@ -1781,10 +2251,31 @@
                     gatewayMapMarkers[gw.id] = marker;
                 });
 
-                // Render Dolly Markers
-                Object.values(liveData.dollies).forEach(dolly => {
-                    const gateway = configuredGateways[dolly.gatewayId]; // Get location from configured gateway
-                    if (gateway && gateway.lat !== null && gateway.lon !== null && !isNaN(gateway.lat) && !isNaN(gateway.lon)) {
+                // Render Dolly Markers with radial offset
+                Object.keys(dolliesByGateway).forEach(gwId => {
+                    const gateway = configuredGateways[gwId];
+                    const dolliesAtGateway = dolliesByGateway[gwId];
+
+                    if (!gateway || gateway.lat === null || gateway.lon === null || isNaN(gateway.lat) || isNaN(gateway.lon)) {
+                        console.warn(`Gateway ${gwId} for dollies has no valid coordinates configured, skipping map markers for these dollies.`);
+                        return;
+                    }
+
+                    const baseLat = gateway.lat;
+                    const baseLon = gateway.lon;
+                    const offsetRadius = 0.0003; // Small radius in degrees for offset
+                    const angleStep = (2 * Math.PI) / dolliesAtGateway.length; // Angle between each dolly
+
+                    dolliesAtGateway.forEach((dolly, index) => {
+                        // Calculate offset coordinates for each dolly
+                        const angle = index * angleStep;
+                        const offsetX = offsetRadius * Math.cos(angle);
+                        const offsetY = offsetRadius * Math.sin(angle);
+
+                        // Leaflet uses [latitude, longitude]
+                        const dollyLat = baseLat + offsetY; // Latitudinal offset
+                        const dollyLon = baseLon + offsetX; // Longitudinal offset
+
                         const statusText = translations[currentLang][dolly.status.toLowerCase()] || translations[currentLang].unknown;
                         const lastSeenTime = dolly.lastSeen ? formatTimestamp(dolly.lastSeen) : translations[currentLang].unknown;
                         const popupContent = `
@@ -1797,12 +2288,10 @@
                         `;
                         const dollyIcon = createDollyIcon(dolly.status, dolly.id);
 
-                        const marker = L.marker([gateway.lat, gateway.lon], { icon: dollyIcon }).addTo(map)
+                        const marker = L.marker([dollyLat, dollyLon], { icon: dollyIcon }).addTo(map)
                             .bindPopup(popupContent);
                         dollyMapMarkers[dolly.id] = marker;
-                    } else {
-                        console.warn(`Dolly ${dolly.id} associated with unknown or invalid gateway ${dolly.gatewayId}, skipping map marker.`);
-                    }
+                    });
                 });
 
                 map.invalidateSize(); // Crucial for map rendering when tab is hidden initially
@@ -1813,6 +2302,16 @@
              * This uses mock data as a full backend/database is not implemented in this frontend-only solution.
              */
             function renderHistoricalCharts() {
+                // Ensure canvas elements exist before trying to create charts
+                const hourlyCanvas = document.getElementById('hourlyMessageRateChart');
+                const gatewayOnlineCanvas = document.getElementById('gatewayOnlinePercentageChart');
+                const dollyOnlineCanvas = document.getElementById('dollyOnlinePercentageChart');
+
+                if (!hourlyCanvas || !gatewayOnlineCanvas || !dollyOnlineCanvas) {
+                    console.warn("One or more historical chart canvas elements not found. Skipping chart rendering.");
+                    return;
+                }
+
                 // Get CSS variables
                 const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary');
                 const successColor = getComputedStyle(document.documentElement).getPropertyValue('--success');
@@ -1997,14 +2496,122 @@
 
                 // Destroy existing charts before re-creating
                 if (hourlyMessageRateChartInstance) hourlyMessageRateChartInstance.destroy();
-                hourlyMessageRateChartInstance = new Chart(document.getElementById('hourlyMessageRateChart').getContext('2d'), hourlyMessageRateChartConfig);
+                hourlyMessageRateChartInstance = new Chart(hourlyCanvas.getContext('2d'), hourlyMessageRateChartConfig);
 
                 if (gatewayOnlinePercentageChartInstance) gatewayOnlinePercentageChartInstance.destroy();
-                gatewayOnlinePercentageChartInstance = new Chart(document.getElementById('gatewayOnlinePercentageChart').getContext('2d'), gatewayOnlinePercentageChartConfig);
+                gatewayOnlinePercentageChartInstance = new Chart(gatewayOnlineCanvas.getContext('2d'), gatewayOnlinePercentageChartConfig);
 
                 // Destroy and create the new Dolly Online Percentage Chart
                 if (dollyOnlinePercentageChartInstance) dollyOnlinePercentageChartInstance.destroy();
-                dollyOnlinePercentageChartInstance = new Chart(document.getElementById('dollyOnlinePercentageChart').getContext('2d'), dollyOnlinePercentageChartConfig);
+                dollyOnlinePercentageChartInstance = new Chart(dollyOnlineCanvas.getContext('2d'), dollyOnlinePercentageChartConfig);
+            }
+
+            /**
+             * Renders the mock user list in the User Management tab.
+             * This function only runs if the current user is an admin.
+             */
+            function renderUserManagement() {
+                userListTbody.innerHTML = ''; // Clear current table content
+
+                if (currentUser && currentUser.role === 'admin') {
+                    // Convert mockUsers object into an array for easier iteration
+                    const usersArray = Object.keys(mockUsers).map(username => ({
+                        username: username,
+                        role: mockUsers[username].role
+                    }));
+
+                    if (usersArray.length === 0) {
+                        userListTbody.innerHTML = `<tr><td colspan="2" class="px-4 py-3 text-center text-gray-500">No users found.</td></tr>`;
+                    } else {
+                        usersArray.forEach(user => {
+                            const row = `
+                                <tr class="hover:bg-indigo-50 transition duration-150 ease-in-out">
+                                    <td class="px-4 py-3 font-medium">${user.username}</td>
+                                    <td class="px-4 py-3 text-gray-600">${user.role}</td>
+                                </tr>
+                            `;
+                            userListTbody.insertAdjacentHTML('beforeend', row);
+                        });
+                    }
+                } else {
+                    // If not an admin, clear the table and potentially show a message
+                    userListTbody.innerHTML = `<tr><td colspan="2" class="px-4 py-3 text-center text-gray-500">Access Denied. Only administrators can view user management.</td></tr>`;
+                }
+            }
+
+            /**
+             * Calls the Gemini API to generate a network status summary.
+             */
+            async function generateNetworkSummary() {
+                // Show loading state
+                generateSummaryBtn.disabled = true;
+                summaryButtonText.classList.add('hidden');
+                summarySpinner.classList.remove('hidden');
+                llmSummaryContent.innerHTML = '';
+                llmSummaryLoading.classList.remove('hidden');
+                llmSummaryModal.classList.add('show');
+
+                const totalConfiguredGateways = Object.keys(configuredGateways).length;
+                const onlineGateways = Object.values(liveData.gateways).filter(gw => gw.status === 'ONLINE').length;
+                const offlineGateways = totalConfiguredGateways - onlineGateways; // Configured but not online
+                const totalDollies = Object.keys(liveData.dollies).length;
+                const onlineDollies = Object.values(liveData.dollies).filter(d => d.status === 'ONLINE').length;
+                const offlineDollies = totalDollies - onlineDollies;
+                const currentMessageRate = lastMinuteMessageCount; // messages per minute
+
+                let onlineGatewaysList = Object.values(liveData.gateways).filter(gw => gw.status === 'ONLINE').map(gw => gw.id).join(', ') || 'None';
+                let offlineGatewaysList = Object.values(liveData.gateways).filter(gw => gw.status === 'OFFLINE').map(gw => gw.id).join(', ') || 'None';
+                let onlineDolliesList = Object.values(liveData.dollies).filter(dolly => dolly.status === 'ONLINE').map(dolly => dolly.id).join(', ') || 'None';
+                let offlineDolliesList = Object.values(liveData.dollies).filter(dolly => dolly.status === 'OFFLINE').map(dolly => dolly.id).join(', ') || 'None';
+
+                // Construct prompt
+                const prompt = `Generate a concise and professional summary of the current dolly tracking network status.
+                
+                Network Statistics:
+                - Total configured gateways: ${totalConfiguredGateways}
+                - Online gateways: ${onlineGateways} (IDs: ${onlineGatewaysList})
+                - Offline gateways: ${offlineGateways} (IDs: ${offlineGatewaysList})
+                - Total dollies detected: ${totalDollies}
+                - Online dollies: ${onlineDollies} (IDs: ${onlineDolliesList})
+                - Offline dollies: ${offlineDollies} (IDs: ${offlineDolliesList})
+                - Current message rate: ${currentMessageRate} messages per minute.
+                
+                Focus on overall network health, highlighting areas of strong performance and any potential concerns (e.g., significant number of offline devices). Keep it brief, factual, and actionable if issues are present.`;
+
+                try {
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = ""; // Leave this as-is; Canvas will automatically provide it.
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                    
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        llmSummaryContent.innerHTML = text; // Display LLM response
+                    } else {
+                        llmSummaryContent.textContent = "Error: Could not generate summary. No valid response from LLM.";
+                        console.error("LLM response structure unexpected:", result);
+                    }
+                } catch (error) {
+                    llmSummaryContent.textContent = `Error generating summary: ${error.message}. Please check your network connection and API setup.`;
+                    console.error("Error calling Gemini API:", error);
+                } finally {
+                    // Hide loading state
+                    generateSummaryBtn.disabled = false;
+                    summaryButtonText.classList.remove('hidden');
+                    summarySpinner.classList.add('hidden');
+                    llmSummaryLoading.classList.add('hidden');
+                }
             }
 
 
@@ -2035,11 +2642,16 @@
                     }
                     setTimeout(() => {
                         map.invalidateSize();
+                        renderMap(); // Ensure markers are redrawn with new positions if data changed
                     }, 200);
                 }
                 // Re-render historical charts if switching to that tab
                 if (targetTabId === 'historical-trends') {
                     renderHistoricalCharts();
+                }
+                // Re-render user management table if switching to that tab
+                if (targetTabId === 'user-management') {
+                    renderUserManagement();
                 }
             }
 
@@ -2078,6 +2690,13 @@
              */
             async function handleFormSubmit(e) {
                 e.preventDefault();
+
+                // Only allow admins to submit this form
+                if (!currentUser || currentUser.role !== 'admin') {
+                    await showAlert("Unauthorized: Only admin users can modify gateway configurations.", "Access Denied");
+                    return;
+                }
+
                 const editId = document.getElementById('edit-id').value;
                 const gatewayId = document.getElementById('gatewayId').value.trim();
                 const gatewayName = document.getElementById('gatewayName').value.trim();
@@ -2133,7 +2752,12 @@
              * Populates the form with data for editing a gateway.
              * @param {Event} e - The click event from the edit button.
              */
-            function handleEdit(e) {
+            async function handleEdit(e) {
+                // Only allow admins to edit
+                if (!currentUser || currentUser.role !== 'admin') {
+                    await showAlert("Unauthorized: Only admin users can edit gateway configurations.", "Access Denied");
+                    return;
+                }
                 const id = e.target.closest('button').dataset.id;
                 const gateway = configuredGateways[id];
                 if (gateway) {
@@ -2150,6 +2774,12 @@
              * @param {Event} e - The click event from the delete button.
              */
             async function handleDelete(e) {
+                 // Only allow admins to delete
+                if (!currentUser || currentUser.role !== 'admin') {
+                    await showAlert("Unauthorized: Only admin users can delete gateway configurations.", "Access Denied");
+                    return;
+                }
+
                  const id = e.target.closest('button').dataset.id;
                  const confirmed = await showConfirm(`${translations[currentLang].alertDeleteConfirm} ${id}?`);
                  if (confirmed) {
@@ -2168,6 +2798,23 @@
                 searchGatewaysInput.addEventListener('input', renderTables);
                 searchDolliesInput.addEventListener('input', renderTables);
             }
+
+            // --- PASSWORD VISIBILITY TOGGLE ---
+            function setupPasswordToggle() {
+                togglePassword.addEventListener('click', () => {
+                    const passwordInput = document.getElementById('login-password');
+                    const icon = togglePassword.querySelector('i');
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        passwordInput.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                });
+            }
             
             // --- INITIALIZATION ---
             /**
@@ -2176,6 +2823,7 @@
             function init() {
                 // Set initial language
                 setLanguage(currentLang);
+                updateWelcomeMessage(); // Initial welcome message display
 
                 // Setup main tab event listeners
                 document.querySelectorAll('.main-tab-button').forEach(button => {
@@ -2202,17 +2850,40 @@
                 // Set up search filters
                 setupSearchFilters();
 
+                // Setup password visibility toggle
+                setupPasswordToggle();
+
+                // Login form and logout button listeners
+                loginForm.addEventListener('submit', handleLogin);
+                logoutBtn.addEventListener('click', handleLogout);
+
+                // LLM summary button listener
+                generateSummaryBtn.addEventListener('click', generateNetworkSummary);
+
+                // Check for existing session
+                const storedUser = sessionStorage.getItem('currentUser');
+                if (storedUser) {
+                    try {
+                        currentUser = JSON.parse(storedUser);
+                        showMainApp(); // Show main app if logged in
+                    } catch (e) {
+                        console.error("Error parsing stored user session:", e);
+                        showLoginScreen(); // Fallback to login
+                    }
+                } else {
+                    showLoginScreen(); // Show login screen if no session
+                }
+                
                 // Start clock and stats update intervals
                 setInterval(updateClock, 1000);
                 messageRateInterval = setInterval(updateStats, 60000); // Update stats every minute
                 updateClock(); // Initial call
                 updateStats(); // Initial call
 
-                // Initial render of all components (map is now deferred)
+                // Initial render of all components, but historical charts are now deferred
                 renderAll();
                 
-                // Connect to MQTT via proxy
-                connectToMQTT();
+                // connectToMQTT() is now called within showMainApp() after successful login
             }
 
             init();
