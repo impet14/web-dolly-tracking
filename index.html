@@ -1912,8 +1912,12 @@
              * Updates the KPI cards with current data.
              */
             function renderKPIs() {
+                // Always use configuredGateways for total
                 const totalGateways = Object.keys(configuredGateways).length;
-                const onlineGateways = Object.values(liveData.gateways).filter(gw => gw.status === 'ONLINE').length;
+                const onlineGateways = Object.values(configuredGateways).filter(gw => {
+                    const liveGw = liveData.gateways[gw.id];
+                    return liveGw && liveGw.status === 'ONLINE';
+                }).length;
                 const totalDollies = Object.keys(liveData.dollies).length;
                 const onlineDollies = Object.values(liveData.dollies).filter(d => d.status === 'ONLINE').length;
 
@@ -2167,134 +2171,71 @@
                 // Only render map if it has been initialized
                 if (!mapInitialized) return;
 
-                // Clear existing markers first
-                for (const key in gatewayMapMarkers) {
-                    if (gatewayMapMarkers[key]) map.removeLayer(gatewayMapMarkers[key]);
-                    delete gatewayMapMarkers[key];
-                }
-                for (const key in dollyMapMarkers) {
-                    if (dollyMapMarkers[key]) map.removeLayer(dollyMapMarkers[key]);
-                    delete dollyMapMarkers[key];
-                }
+                // Remove all previous markers
+                Object.values(gatewayMapMarkers).forEach(marker => map.removeLayer(marker));
+                Object.values(dollyMapMarkers).forEach(marker => map.removeLayer(marker));
+                Object.keys(gatewayMapMarkers).forEach(key => delete gatewayMapMarkers[key]);
+                Object.keys(dollyMapMarkers).forEach(key => delete dollyMapMarkers[key]);
 
-                const locationsForFitBounds = []; // Collect all valid locations for map fitting
-                // Add configured gateway locations to fit bounds
+                // Gather all gateway and dolly positions for fitBounds
+                const allLocations = [];
                 Object.values(configuredGateways).forEach(gw => {
-                    if (gw.lat !== null && gw.lon !== null && !isNaN(gw.lat) && !isNaN(gw.lon)) {
-                        locationsForFitBounds.push([gw.lat, gw.lon]);
+                    if (gw.lat && gw.lon && !isNaN(gw.lat) && !isNaN(gw.lon)) {
+                        allLocations.push([gw.lat, gw.lon]);
                     }
                 });
-                
-                // Group dollies by gateway ID to handle overlaps
-                const dolliesByGateway = {};
                 Object.values(liveData.dollies).forEach(dolly => {
-                    if (dolly.gatewayId) {
-                        if (!dolliesByGateway[dolly.gatewayId]) {
-                            dolliesByGateway[dolly.gatewayId] = [];
-                        }
-                        dolliesByGateway[dolly.gatewayId].push(dolly);
+                    const gw = configuredGateways[dolly.gatewayId];
+                    if (gw && gw.lat && gw.lon && !isNaN(gw.lat) && !isNaN(gw.lon)) {
+                        allLocations.push([gw.lat, gw.lon]);
                     }
                 });
 
-
-                const defaultCenter = [13.736717, 100.523186]; // Bangkok, Thailand coordinates
-                const defaultZoom = 12;
-
-                // Fit bounds or set view initially and on updates
-                if (locationsForFitBounds.length > 0 || Object.keys(dolliesByGateway).length > 0) {
-                    // Include all gateway locations and effective dolly locations for bounding
-                    const allLocations = [...locationsForFitBounds];
-                    Object.keys(dolliesByGateway).forEach(gwId => {
-                        const gateway = configuredGateways[gwId];
-                        if (gateway && gateway.lat !== null && gateway.lon !== null && !isNaN(gateway.lat) && !isNaN(gateway.lon)) {
-                            allLocations.push([gateway.lat, gateway.lon]);
-                        }
-                    });
-                    if (allLocations.length > 0) {
-                        map.fitBounds(allLocations, { padding: [40, 40] });
-                    } else {
-                        map.setView(defaultCenter, defaultZoom);
-                    }
+                // Fit map to all device locations
+                if (allLocations.length > 0) {
+                    map.fitBounds(allLocations, { padding: [40, 40] });
                 } else {
-                    map.setView(defaultCenter, defaultZoom);
+                    map.setView([13.736717, 100.523186], 12); // Default Bangkok
                 }
 
-                // Render Gateway Markers
+                // Render gateway markers
                 Object.values(configuredGateways).forEach(gw => {
-                    if (gw.lat === null || gw.lon === null || isNaN(gw.lat) || isNaN(gw.lon)) {
-                        console.warn(`Gateway ${gw.id} has no valid coordinates configured, skipping map marker.`);
-                        return;
+                    if (gw.lat && gw.lon && !isNaN(gw.lat) && !isNaN(gw.lon)) {
+                        const liveGw = liveData.gateways[gw.id];
+                        const status = liveGw ? liveGw.status : 'OFFLINE';
+                        const statusText = translations[currentLang][status.toLowerCase()] || translations[currentLang].unknown;
+                        const lastSeenTime = liveGw && liveGw.lastSeen ? formatTimestamp(liveGw.lastSeen) : translations[currentLang].unknown;
+                        const iconColor = status === 'ONLINE' ? 'green' : (status === 'OFFLINE' ? 'red' : 'grey');
+                        const markerIcon = L.icon({
+                            iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColor}.png`,
+                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                            shadowSize: [41, 41]
+                        });
+                        const marker = L.marker([gw.lat, gw.lon], { icon: markerIcon })
+                            .addTo(map)
+                            .bindPopup(`<b>${gw.name} (${gw.id})</b><br>${translations[currentLang].status}: ${statusText}<br>${translations[currentLang].lastSeen}: ${lastSeenTime}`);
+                        gatewayMapMarkers[gw.id] = marker;
                     }
-                    const liveGw = liveData.gateways[gw.id];
-                    const status = liveGw ? liveGw.status : 'OFFLINE'; // Default to offline if no live data
-                    const statusText = translations[currentLang][status.toLowerCase()] || translations[currentLang].unknown;
-                    const lastSeenTime = liveGw && liveGw.lastSeen ? formatTimestamp(liveGw.lastSeen) : translations[currentLang].unknown;
-                    
-                    const popupContent = `
-                        <b>${gw.name} (${gw.id})</b><br>
-                        ${translations[currentLang].status}: ${statusText}<br>
-                        ${translations[currentLang].lastSeen}: ${lastSeenTime}
-                    `;
-                    // Use different colored markers based on status
-                    const iconColor = status === 'ONLINE' ? 'green' : (status === 'OFFLINE' ? 'red' : 'grey'); // Grey for unknown
-                    const markerIcon = L.icon({
-                        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColor}.png`,
-                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                        shadowSize: [41, 41]
-                    });
-
-                    const marker = L.marker([gw.lat, gw.lon], { icon: markerIcon }).addTo(map)
-                        .bindPopup(popupContent);
-                    gatewayMapMarkers[gw.id] = marker;
                 });
 
-                // Render Dolly Markers with radial offset
-                Object.keys(dolliesByGateway).forEach(gwId => {
-                    const gateway = configuredGateways[gwId];
-                    const dolliesAtGateway = dolliesByGateway[gwId];
-
-                    if (!gateway || gateway.lat === null || gateway.lon === null || isNaN(gateway.lat) || isNaN(gateway.lon)) {
-                        console.warn(`Gateway ${gwId} for dollies has no valid coordinates configured, skipping map markers for these dollies.`);
-                        return;
-                    }
-
-                    const baseLat = gateway.lat;
-                    const baseLon = gateway.lon;
-                    const offsetRadius = 0.0003; // Small radius in degrees for offset
-                    const angleStep = (2 * Math.PI) / dolliesAtGateway.length; // Angle between each dolly
-
-                    dolliesAtGateway.forEach((dolly, index) => {
-                        // Calculate offset coordinates for each dolly
-                        const angle = index * angleStep;
-                        const offsetX = offsetRadius * Math.cos(angle);
-                        const offsetY = offsetRadius * Math.sin(angle);
-
-                        // Leaflet uses [latitude, longitude]
-                        const dollyLat = baseLat + offsetY; // Latitudinal offset
-                        const dollyLon = baseLon + offsetX; // Longitudinal offset
-
-                        const statusText = translations[currentLang][dolly.status.toLowerCase()] || translations[currentLang].unknown;
+                // Render dolly markers at their current gateway
+                Object.values(liveData.dollies).forEach(dolly => {
+                    const gw = configuredGateways[dolly.gatewayId];
+                    if (gw && gw.lat && gw.lon && !isNaN(gw.lat) && !isNaN(gw.lon)) {
+                        const statusText = translations[currentLang][dolly.status?.toLowerCase()] || translations[currentLang].unknown;
                         const lastSeenTime = dolly.lastSeen ? formatTimestamp(dolly.lastSeen) : translations[currentLang].unknown;
-                        const popupContent = `
-                            <b>${translations[currentLang].id}: ${dolly.id}</b><br>
-                            ${translations[currentLang].status}: ${statusText}<br>
-                            ${translations[currentLang].gateway}: ${dolly.gatewayId || translations[currentLang].unknown}<br>
-                            ${translations[currentLang].rssi}: ${dolly.rssi !== undefined ? dolly.rssi : translations[currentLang].unknown} dBm<br>
-                            ${translations[currentLang].distance}: ${dolly.distance || translations[currentLang].unknown}<br>
-                            ${translations[currentLang].lastSeen}: ${lastSeenTime}
-                        `;
                         const dollyIcon = createDollyIcon(dolly.status, dolly.id);
-
-                        const marker = L.marker([dollyLat, dollyLon], { icon: dollyIcon }).addTo(map)
-                            .bindPopup(popupContent);
+                        const marker = L.marker([gw.lat, gw.lon], { icon: dollyIcon })
+                            .addTo(map)
+                            .bindPopup(`<b>${translations[currentLang].id}: ${dolly.id}</b><br>${translations[currentLang].status}: ${statusText}<br>${translations[currentLang].gateway}: ${dolly.gatewayId || translations[currentLang].unknown}<br>${translations[currentLang].rssi}: ${dolly.rssi !== undefined ? dolly.rssi : translations[currentLang].unknown} dBm<br>${translations[currentLang].distance}: ${dolly.distance || translations[currentLang].unknown}<br>${translations[currentLang].lastSeen}: ${lastSeenTime}`);
                         dollyMapMarkers[dolly.id] = marker;
-                    });
+                    }
                 });
 
-                map.invalidateSize(); // Crucial for map rendering when tab is hidden initially
+                map.invalidateSize();
             }
 
             /**
@@ -2555,7 +2496,7 @@
                 const onlineGateways = Object.values(liveData.gateways).filter(gw => gw.status === 'ONLINE').length;
                 const offlineGateways = totalConfiguredGateways - onlineGateways; // Configured but not online
                 const totalDollies = Object.keys(liveData.dollies).length;
-                const onlineDollies = Object.values(liveData.dollies).filter(d => d.status === 'ONLINE').length;
+                const onlineDollies = Object.values(liveData.dollies).filter(dolly => dolly.status === 'ONLINE').length;
                 const offlineDollies = totalDollies - onlineDollies;
                 const currentMessageRate = lastMinuteMessageCount; // messages per minute
 
